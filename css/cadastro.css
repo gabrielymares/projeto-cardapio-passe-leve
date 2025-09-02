@@ -1,0 +1,111 @@
+/* RESET GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url('../imagens/imagensPasseLeve/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg') no-repeat center center/cover; /* coloque seu fundo */
+}
+.main{
+    margin-left: 35%;
+}
+
+/* LOGO */
+.logo {
+  text-align: center;
+  padding-bottom: 0px;
+}
+
+.logo img {
+  width: 400px; /* ajuste conforme a logo */
+  margin-bottom: -10px;
+  
+
+}
+
+.logo h1 {
+  color: #6a8f3f; 
+  font-size: 24px;
+  font-weight: bold;
+ 
+}
+
+.logo p {
+  font-size: 12px;
+  color: #333;
+}
+
+/* CONTAINER DO FORM */
+.form-container {
+  background: #f4f4f4;
+  padding: 20px;
+  border-radius: 20px;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  height: 270px;
+  padding: 30px; /* aumenta o espaço interno */
+  border-radius: 15px;
+  width: 100%;
+}
+
+/* Aba cadastro/login */
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  background: #ddd;
+  margin: 0 5px;
+}
+
+.tab.active {
+  background: #75a044;
+  color: #ffffff;
+}
+
+/* Inputs */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background: #d3d4cb;
+  color: white;
+  outline: none;
+}
+
+input::placeholder {
+  color: white;
+}
+
+button[type="submit"] {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background: #75a044;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
