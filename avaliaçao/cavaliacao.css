@@ -1,0 +1,81 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #cfc8d1; /* fundo semelhante à imagem */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: url('../imagens/imagensPasseLeve/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg') no-repeat center center/cover;
+}
+
+.form-box {
+  background: #f2f2f2;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  width: 450px;
+}
+
+.pergunta {
+  background: #6a8f3f;
+  color: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pergunta span {
+  font-size: 14px;
+}
+
+.respostas {
+  display: none;
+  padding: 12px;
+  background: #e0e0e0;
+  border-radius: 8px;
+  margin: -5px 0 10px 0;
+  animation: abrir 0.3s ease;
+}
+
+.respostas label {
+  display: block;
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+/* Botão */
+button {
+  margin-top: 20px;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 25px;
+  background: #6a8f3f;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #4f6b2f;
+}
+
+/* Animação suave ao abrir */
+@keyframes abrir {
+  from {opacity: 0; transform: translateY(-5px);}
+  to {opacity: 1; transform: translateY(0);}
+}

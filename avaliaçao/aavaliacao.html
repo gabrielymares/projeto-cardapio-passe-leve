@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perguntas Accordion</title>
+  <link rel="stylesheet" href="../avaliaçao/cavaliacao.css">
+</head>
+<body>
+  <div class="form-box">
+    <!-- Pergunta 1 -->
+    <div class="pergunta" onclick="toggleResposta(this)">
+      Sua alimentação é saudável? <span>▼</span>
+    </div>
+    <div class="respostas">
+      <label><input type="radio" name="p1"> Sim</label>
+      <label><input type="radio" name="p1"> Não</label>
+      <label><input type="radio" name="p1"> Mais ou Menos</label>
+      
+    </div>
+
+    <!-- Pergunta 2 -->
+   <div class="pergunta" onclick="toggleResposta(this)">
+  Você possui alguma alergia alimentar? <span>▼</span>
+</div>
+<div class="respostas">
+  <label><input type="checkbox" name="alergia" value="nenhuma" onclick="marcarNenhuma(this)"> Nenhuma</label>
+  <label><input type="checkbox" name="alergia" value="leite"> Leite / Lactose</label>
+  <label><input type="checkbox" name="alergia" value="ovos"> Ovos</label>
+  <label><input type="checkbox" name="alergia" value="amendoim"> Amendoim / Castanhas</label>
+  <label><input type="checkbox" name="alergia" value="gluten"> Glúten / Trigo</label>
+  <label><input type="checkbox" name="alergia" value="soja"> Soja</label>
+  <label><input type="checkbox" name="alergia" value="peixes"> Peixes / Frutos do mar</label>
+  <label>
+    <input type="checkbox" name="alergia" value="outros" onclick="mostrarCampoOutros(this)"> Outros:
+    <input type="text" name="alergia_outros" class="campo-outros" style="display:none;" placeholder="Especifique">
+  </label>
+</div>
+
+<script>
+function toggleResposta(element) {
+  const respostas = element.nextElementSibling;
+  respostas.style.display = respostas.style.display === 'block' ? 'none' : 'block';
+}
+
+// Lógica para "Nenhuma"
+function marcarNenhuma(nenhumaCheckbox) {
+  const checkboxes = document.querySelectorAll('input[name="alergia"]');
+  if (nenhumaCheckbox.checked) {
+    checkboxes.forEach(cb => {
+      if (cb !== nenhumaCheckbox) cb.checked = false;
+    });
+  }
+}
+
+// Mostrar campo de texto para "Outros"
+function mostrarCampoOutros(outrosCheckbox) {
+  const campo = outrosCheckbox.parentElement.querySelector('.campo-outros');
+  campo.style.display = outrosCheckbox.checked ? 'inline-block' : 'none';
+}
+</script>
+
+
+    <!-- Pergunta 3 -->
+    <div class="pergunta" onclick="toggleResposta(this)">
+      Você têm bons hábitos de saúde <span>▼</span>
+    </div>
+    <div class="respostas">
+      <label><input type="radio" name="p3"> Sim</label>
+      <label><input type="radio" name="p3"> Não</label>
+    </div>
+
+ <!-- Pergunta 4 -->
+    <div class="pergunta" onclick="toggleResposta(this)">
+  Você possui alguma restrição alimentar? <span>▼</span>
+</div>
+<div class="respostas">
+  <label><input type="checkbox" name="restricao" value="nenhuma" onclick="marcarNenhuma(this)"> Nenhuma</label>
+  <label><input type="checkbox" name="restricao" value="vegetariano"> Vegetariano(a)</label>
+  <label><input type="checkbox" name="restricao" value="vegano"> Vegano(a)</label>
+  <label><input type="checkbox" name="restricao" value="gluten"> Dieta sem glúten</label>
+  <label><input type="checkbox" name="restricao" value="diabetes"> Diabetes / controle de açúcar</label>
+  <label><input type="checkbox" name="restricao" value="hipertensao"> Hipertensão / restrição de sal</label>
+  <label>
+    <input type="checkbox" name="restricao" value="outros" onclick="mostrarCampoOutros(this)"> Outros:
+    <input type="text" name="restricao_outros" class="campo-outros" style="display:none;" placeholder="Especifique">
+  </label>
+</div>
+
+
+    <!-- Botão -->
+   <button>Enviar</button>
+  </div>
+
+  <script src="../avaliaçao/bavaliacao.js"></script>
+</body>
+</html>
