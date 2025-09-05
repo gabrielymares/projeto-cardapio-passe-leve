@@ -59,30 +59,11 @@
                 </label>
             </div>
 
-           <button type="submit">Enviar</button>
-    </form>
-  </div>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
 
-  <script src="./avaliacao.js"></script>
+    <!-- JS principal -->
+    <script src="./avaliacao.js"></script>
 </body>
 </html>
-    <script>
-        function toggleResposta(element) {
-            const respostas = element.nextElementSibling;
-            respostas.style.display = respostas.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function marcarNenhuma(nenhumaCheckbox) {
-            const checkboxes = document.querySelectorAll('input[name="' + nenhumaCheckbox.name + '"]');
-            if (nenhumaCheckbox.checked) {
-                checkboxes.forEach(cb => {
-                    if (cb !== nenhumaCheckbox) cb.checked = false;
-                });
-            }
-        }
-
-        function mostrarCampoOutros(outrosCheckbox) {
-            const campo = outrosCheckbox.parentElement.querySelector('.campo-outros');
-            campo.style.display = outrosCheckbox.checked ? 'inline-block' : 'none';
-        }
-    
