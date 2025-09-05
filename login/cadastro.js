@@ -65,7 +65,7 @@ formLogin.addEventListener("submit", function(e) {
   if(usuarioEncontrado) {
     alert("Login realizado com sucesso!");
     // redireciona para outra página
-    window.location.href = "outra-pagina.html"; // troque pelo link desejado
+    window.location.href = "../avaliaçao/avaliacao.html"; // troque pelo link desejado
   } else {
     alert("Email ou senha incorretos!");
   }

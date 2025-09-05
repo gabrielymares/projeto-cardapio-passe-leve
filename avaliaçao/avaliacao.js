@@ -1,34 +1,5 @@
-function toggleResposta(element) {
-    let respostas = element.nextElementSibling;
-    let seta = element.querySelector("span");
-
-    if (respostas.style.display === "block") {
-        respostas.style.display = "none";
-        seta.textContent = "▼";
-    } else {
-        respostas.style.display = "block";
-        seta.textContent = "▲";
-    }
-}
-
-// Lógica para "Nenhuma" (agora unificada)
-function marcarNenhuma(nenhumaCheckbox) {
-    const name = nenhumaCheckbox.name;
-    const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
-    if (nenhumaCheckbox.checked) {
-        checkboxes.forEach(cb => {
-            if (cb !== nenhumaCheckbox) cb.checked = false;
-        });
-    }
-}
-
-// Mostrar campo de texto para "Outros" (agora unificado)
-function mostrarCampoOutros(outrosCheckbox) {
-    const campo = outrosCheckbox.parentElement.querySelector('.campo-outros');
-    if (campo) {
-        campo.style.display = outrosCheckbox.checked ? 'inline-block' : 'none';
-    }
-}
+// O restante das suas funções (toggleResposta, marcarNenhuma, mostrarCampoOutros)
+// ficam exatamente como estão.
 
 // --- NOVAS FUNÇÕES DE CLASSIFICAÇÃO ---
 
@@ -75,12 +46,38 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (pontuacaoTotal >= 36) {
             grupoUsuario = 'Grupo 3 – Estilo de Vida Saudável';
         } else if (pontuacaoTotal >= 21) {
+            // A sua lógica aqui repete o "Grupo 2", verifique se é isso mesmo que você quer
             grupoUsuario = 'Grupo 2 – Condições Intestinais';
         } else {
+            // A sua lógica aqui repete o "Grupo 1", verifique se é isso mesmo que você quer
             grupoUsuario = 'Grupo 1 – Condições Metabólicas';
         }
         
-        // Exibição do resultado (você pode adaptar isso)
-        document.getElementById('grupo-resultado').textContent = grupoUsuario;
+        
+// --- CÓDIGO PARA REDIRECIONAR E ENVIAR OS DADOS ---
+const urlDeResultados = `pontuacao.html?pontos=${pontuacaoTotal}&grupo=${encodeURIComponent(grupoUsuario)}`;
+ window.location.href = `../pontuacao/${urlDeResultados}`;
     });
 });
+
+
+ function toggleResposta(element) {
+            const respostas = element.nextElementSibling;
+            respostas.style.display = respostas.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function marcarNenhuma(nenhumaCheckbox) {
+            const checkboxes = document.querySelectorAll('input[name="' + nenhumaCheckbox.name + '"]');
+            if (nenhumaCheckbox.checked) {
+                checkboxes.forEach(cb => {
+                    if (cb !== nenhumaCheckbox) cb.checked = false;
+                });
+            }
+        }
+
+        function mostrarCampoOutros(outrosCheckbox) {
+            const campo = outrosCheckbox.parentElement.querySelector('.campo-outros');
+            campo.style.display = outrosCheckbox.checked ? 'inline-block' : 'none';
+        }
+    
+

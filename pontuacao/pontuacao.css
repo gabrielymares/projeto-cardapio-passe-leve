@@ -1,0 +1,85 @@
+/* Contenedor padre que ocupa toda la pantalla */
+body {
+    display: flex;
+    justify-content: center; /* centra horizontalmente */
+    align-items: center;     /* centra verticalmente */
+    height: 100vh;           /* altura completa de la ventana */
+    margin: 0;
+    background: url('../imagens/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg') no-repeat center center;
+    background-size: cover;
+}
+
+/* Caja principal que contiene todo */
+.box-resultado-principal {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    /* Ajuste hacia la derecha */
+    transform: translateX(20%); /* mueve un 20% hacia la derecha */
+}
+
+/* Título del resultado */
+.box-resultado-principal h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: #555;
+}
+
+/* Descripción del resultado */
+.box-resultado-principal p {
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Botón dentro de la caja */
+.box-resultado-principal .botao-prosseguir {
+    background-color: #6a8f3f;
+    color: #fff;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    align-self: center; /* centra el botón */
+    transition: background-color 0.3s ease;
+}
+
+.box-resultado-principal .botao-prosseguir:hover {
+    background-color: #457231;
+}
+
+
+.resultado-box {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 40px 30px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 600px;
+  margin: 50px auto;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.resultado-box h2 {
+  margin-bottom: 15px;
+}
+
+.resultado-box button {
+  background-color: #6b8e23;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}

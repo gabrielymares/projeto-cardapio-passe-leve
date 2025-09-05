@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perguntas Accordion</title>
+  <link rel="stylesheet" href="./pontuacao.css">
+</head>
+
+
+
+<div id="resultado-box" class="resultado-box">
+  <h2 id="resultado-pontos"></h2>
+  <p id="resultado-texto"></p>
+  <button onclick="prosseguir()">Prosseguir</button>
+</div>
+
+<script>
+  // Ler os dados do LocalStorage
+  const pontos = localStorage.getItem("pontos");
+  const grupo = localStorage.getItem("grupo");
+
+  // Preencher a caixa
+  document.getElementById("resultado-pontos").innerText = `${pontos} pontos - ${grupo}`;
+  document.getElementById("resultado-texto").innerText = `Ok! Com base nos seus hábitos, você recebeu no total de ${pontos} pontos!`;
+
+  function prosseguir() {
+    // Aqui você define para onde o botão deve levar
+    window.location.href = "proximo_passso.html";
+  }
+</script>
+
+
+
+
+
+
+
+
+    
