@@ -7,7 +7,7 @@ body, html {
     align-items: center;
     background-color: #f0f0f0;
     overflow: hidden;
-    background-image: url('../imagens/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg');
+    background-image: url('Dinfor.jpg');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -21,15 +21,12 @@ body, html {
     align-items: center;
 }
 
-/* Novo estilo para centralizar o título e o formulário juntos */
 .main-content {
     display: flex;
-    flex-direction: column; /* Alinha os itens em coluna */
-    align-items: center; /* Centraliza os itens horizontalmente */
+    flex-direction: column; 
+    align-items: center; 
     text-align: center;
 }
-
-
 
 .form-container {
     background-color: #dcdcdc;
@@ -40,8 +37,6 @@ body, html {
     flex-direction: column;
     align-items: center;
     width: 350px;
-    /* Removido: margin-left: 150px; */
-    /* Removido: margin-right: auto; */
 }
 
 .form-title {
@@ -50,7 +45,9 @@ body, html {
     margin-bottom: 20px;
 }
 
-input[type="text"], input[type="number"], select {
+input[type="text"], 
+input[type="number"], 
+select {
     width: 92%;
     padding: 15px;
     margin-bottom: 15px;
@@ -65,7 +62,6 @@ input[type="text"], input[type="number"], select {
 }
 
 #sexo {
-    /* Ajustado para 100% para manter a centralização. 109% pode causar problemas de layout em alguns navegadores. */
     width: 100%; 
 }
 
@@ -84,7 +80,7 @@ select:invalid {
     padding: 15px;
     border: none;
     border-radius: 10px;
-    background-color: #6a8f3f;
+    background-color: #555551;
     color: white;
     font-size: 1.1em;
     font-weight: bold;
@@ -96,6 +92,31 @@ select:invalid {
 .btn-confirmar:hover {
     background-color: #888;
 }
+
+
+
+#resultado-imc-input {
+    width: 92%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #888888;
+    font-size: 1em;
+    outline: none;
+    height: auto;
+    line-height: normal;
+    text-align: center; 
+    font-weight: bold; 
+}
+
+
+#resultado-imc-input[readonly] {
+    cursor: default;
+}
+
+
 
 @media (max-width: 768px) {
     .form-container {

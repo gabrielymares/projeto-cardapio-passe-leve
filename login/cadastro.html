@@ -3,41 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Passe Leve - Cadastro</title>
+  <title>Passe Leve</title>
   <link rel="stylesheet" href="./cadastro.css">
 </head>
 <body>
-  <!-- LOGO -->
-   <div class="main">
-  <div class="logo">
-    <img src="../imagens/ChatGPT Image 2 de set. de 2025, 15_10_13.png" alt="Logo da Empresa">
-  </div>
-  
-  <!-- FORMULÁRIO -->
-  <div class="form-container">
-    <div class="tabs">
-      <button class="tab active" id="tab-cadastro">Cadastro</button>
-      <button class="tab" id="tab-login">Login</button>
+  <div class="container">
+   
+    <div class="left-panel">
+      <h1>Seja Bem Vindo(a) ao<br>Passe Leve!</h1>
+      <p class="sub">PLANO DE ADAPTAÇÃO PROGRESSIVA DE HÁBITOS ALIMENTARES</p>
     </div>
 
-    <!-- FORMULÁRIO DE CADASTRO -->
-    <form id="cadastro-form">
-      <input type="email" id="email-cadastro" placeholder="Email" required>
-      <input type="tel" id="telefone-cadastro" placeholder="Telefone" required>
-      <input type="password" id="senha-cadastro" placeholder="Senha" required>
-      <button type="submit">Enviar</button>
-    </form>
+   
+    <div class="right-panel">
+      <div class="login-box">
+      
+        <img src="../imagens/logobranca.png" alt="Logo Passe Leve" class="logo">
 
-    <!-- FORMULÁRIO DE LOGIN -->
-    <form id="login-form" style="display:none;">
-     <input type="email" id="email-login" placeholder="Email" required>
-     <input type="password" id="senha-login" placeholder="Senha" required>
+        
+        <div class="tab-buttons">
+          <button class="tab active" id="btnCadastro">Cadastro</button>
+          <button class="tab" id="btnLogin">Login</button>
+        </div>
+
+        
+        <div id="formCadastro" class="form active">
+          <input type="text" id="cadastroInput" placeholder="Email ou Telefone">
+          <input type="password" placeholder="Senha">
+          <button class="submit" id="btnEnviarCadastro">Enviar</button>
+        </div>
+
+        <!-- Formulário de login -->
     
+<div id="formLogin" class="form">
+  <input type="text" placeholder="Email ou Telefone">
 
-      <button type="submit">Entrar</button>
-    </form>
+      
+          <input type="password" placeholder="Senha">
+          <button class="submit" id="btnEnviarLogin">Entrar</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
   <script src="./cadastro.js"></script>
 </body>

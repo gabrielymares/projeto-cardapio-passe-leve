@@ -1,72 +1,61 @@
-// Alternância entre abas
-const tabCadastro = document.getElementById("tab-cadastro");
-const tabLogin = document.getElementById("tab-login");
-const formCadastro = document.getElementById("cadastro-form");
-const formLogin = document.getElementById("login-form");
+const btnCadastro = document.getElementById("btnCadastro");
+const btnLogin = document.getElementById("btnLogin");
+const formCadastro = document.getElementById("formCadastro");
+const formLogin = document.getElementById("formLogin");
+const btnEnviarCadastro = document.getElementById("btnEnviarCadastro");
+const cadastroInput = document.getElementById("cadastroInput");
 
-tabCadastro.addEventListener("click", () => {
-  tabCadastro.classList.add("active");
-  tabLogin.classList.remove("active");
-  formCadastro.style.display = "flex";
-  formLogin.style.display = "none";
-});
-
-tabLogin.addEventListener("click", () => {
-  tabLogin.classList.add("active");
-  tabCadastro.classList.remove("active");
-  formLogin.style.display = "flex";
-  formCadastro.style.display = "none";
-});
-
-// SALVAR DADOS DO CADASTRO NO LOCALSTORAGE
-formCadastro.addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const email = document.getElementById("email-cadastro").value;
-  const telefone = document.getElementById("telefone-cadastro").value;
-  const senha = document.getElementById("senha-cadastro").value;
-
-  const usuario = { email, telefone, senha };
-
-  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-  usuarios.push(usuario);
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
-
-  alert("Cadastro realizado com sucesso!");
-  formCadastro.reset();
-});
-
-
-
-const telefoneInput = document.getElementById("telefone-cadastro");
-
-telefoneInput.addEventListener("input", function(e) {
-  let valor = telefoneInput.value.replace(/\D/g, ""); // remove tudo que não é número
-  if (valor.length > 11) valor = valor.slice(0, 11); // limita a 11 dígitos
-
-  // aplica a máscara: 00 00000-0000
-  valor = valor.replace(/^(\d{2})(\d)/g, "$1 $2");        // adiciona espaço depois do DDD
-  valor = valor.replace(/(\d{5})(\d{1,4})$/, "$1-$2");   // adiciona hífen
-
-  telefoneInput.value = valor;
-});
-
-// LOGIN usando LocalStorage
-formLogin.addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const emailLogin = document.getElementById("email-login").value;
-  const senhaLogin = document.getElementById("senha-login").value;
-
-  const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-  const usuarioEncontrado = usuarios.find(u => u.email === emailLogin && u.senha === senhaLogin);
-
-  if(usuarioEncontrado) {
-    alert("Login realizado com sucesso!");
-    // redireciona para outra página
-    window.location.href = "../formulario/formulario.html"; //  link pra chamar a outra pagina
+// Função para alternar abas
+function showTab(tab) {
+  if (tab === "cadastro") {
+    btnCadastro.classList.add("active");
+    btnLogin.classList.remove("active");
+    formCadastro.classList.add("active");
+    formLogin.classList.remove("active");
   } else {
-    alert("Email ou senha incorretos!");
+    btnLogin.classList.add("active");
+    btnCadastro.classList.remove("active");
+    formLogin.classList.add("active");
+    formCadastro.classList.remove("active");
+  }
+}
+
+// Eventos de clique nos botões
+btnCadastro.addEventListener("click", () => showTab("cadastro"));
+btnLogin.addEventListener("click", () => showTab("login"));
+
+// Após cadastro, redirecionar automaticamente para Login
+btnEnviarCadastro.addEventListener("click", (e) => {
+  e.preventDefault(); // evita envio real
+  alert("Cadastro realizado com sucesso!");
+  showTab("login");
+});
+
+// Máscara dinâmica para Email ou Telefone
+cadastroInput.addEventListener("input", (e) => {
+  let value = e.target.value;
+
+  // Se começa com número → aplicar máscara de telefone
+  if (/^\d/.test(value)) {
+    // Remove tudo que não é número
+    value = value.replace(/\D/g, "");
+
+    // Aplica máscara (XX) XXXXX-XXXX
+    if (value.length > 2 && value.length <= 7) {
+      value = `(${value.slice(0,2)}) ${value.slice(2)}`;
+    } else if (value.length > 7) {
+      value = `(${value.slice(0,2)}) ${value.slice(2,7)}-${value.slice(7,11)}`;
+    }
+    e.target.value = value;
+
+  } else {
+    // Se começa com letra → validar como email (não aplicar máscara, só limitar caracteres inválidos)
+    e.target.value = value.replace(/[^a-zA-Z0-9@._-]/g, "");
   }
 });
+
+   const btnEnviarLogin = document.getElementById("btnEnviarLogin");
+btnEnviarLogin.addEventListener("click", () => {
+  window.location.href = "../formulario/formulario.html";
+});
+

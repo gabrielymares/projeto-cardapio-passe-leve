@@ -1,111 +1,135 @@
-/* RESET GLOBAL */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 body {
+  min-height: 100vh;
+}
+
+/* Container principal dividido */
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Metade esquerda */
+.left-panel {
+  flex: 1;
+  background: #555551; /* cinza */
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: url('../imagens/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg') no-repeat center center/cover; /* coloque seu fundo */
-}
-.main{
-    margin-left: 35%;
-}
-
-/* LOGO */
-.logo {
+  align-items: center;
   text-align: center;
-  padding-bottom: 0px;
+  padding: 40px;
 }
 
-.logo img {
-  width: 400px; /* ajuste conforme a logo */
-  margin-bottom: -10px;
-  
-
+.left-panel h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
 }
 
-.logo h1 {
-  color: #6a8f3f; 
-  font-size: 24px;
+.left-panel .sub {
   font-weight: bold;
- 
+  font-size: 0.9rem;
 }
 
-.logo p {
-  font-size: 12px;
-  color: #333;
-}
-
-/* CONTAINER DO FORM */
-.form-container {
-  background: #f4f4f4;
-  padding: 20px;
-  border-radius: 20px;
-  width: 300px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  height: 270px;
-  padding: 30px; /* aumenta o espaço interno */
-  border-radius: 15px;
-  width: 100%;
-}
-
-/* Aba cadastro/login */
-.tabs {
+/* Metade direita */
+.right-panel {
+  flex: 1;
+  background: white;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Caixa de login */
+.login-box {
+  background: #eeeeee;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 350px;
+}
+
+.logo {
+  max-width: 300px;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Tabs */
+.tab-buttons {
+  display: flex;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
 .tab {
   flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
+  padding: 10px 0;
   border: none;
-  background: #ddd;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 8px;
   margin: 0 5px;
+  background: #ddd;
+  color: #333;
+  transition: 0.3s;
 }
 
 .tab.active {
-  background: #75a044;
-  color: #ffffff;
+  background: #555551;
+  color: white;
 }
 
 /* Inputs */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 input {
-  padding: 10px;
-  border-radius: 20px;
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
   border: none;
-  background: #d3d4cb;
+  border-radius: 8px;
+  background: #555551;
   color: white;
-  outline: none;
+  font-size: 1rem;
 }
 
 input::placeholder {
-  color: white;
+  color: #ddd;
 }
 
-button[type="submit"] {
-  padding: 10px;
-  border-radius: 20px;
+/* Botão enviar */
+.submit {
+  width: 100%;
+  padding: 12px;
   border: none;
-  background: #75a044;
+  border-radius: 8px;
+  background: #555551;
   color: white;
-  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
+  margin-top: 10px;
+}
+
+.submit:hover {
+  background: #333;
+}
+
+.form {
+  display: none;
+}
+
+.form.active {
+  display: block;
 }

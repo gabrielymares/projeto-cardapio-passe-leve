@@ -1,12 +1,13 @@
 /* Contenedor padre que ocupa toda la pantalla */
+/* Body e fundo */
 body {
-    display: flex;
-    justify-content: center; /* centra horizontalmente */
-    align-items: center;     /* centra verticalmente */
-    height: 100vh;           /* altura completa de la ventana */
-    margin: 0;
-    background: url('../imagens/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg') no-repeat center center;
-    background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #393a3b, #b3b0b0);
+  padding: 20px;
+  
 }
 
 /* Caja principal que contiene todo */
@@ -43,7 +44,7 @@ body {
 
 /* Botón dentro de la caja */
 .box-resultado-principal .botao-prosseguir {
-    background-color: #6a8f3f;
+    background-color: #555551;
     color: #fff;
     padding: 12px 30px;
     border: none;
@@ -84,7 +85,7 @@ ul {
 }
 
 .resultado-box button {
-  background-color: #6b8e23;
+  background-color: #555551;
   color: white;
   border: none;
   padding: 10px 25px;

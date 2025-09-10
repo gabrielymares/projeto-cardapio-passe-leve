@@ -3,79 +3,115 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Body e fundo */
 body {
-  background: #cfc8d1; /* fundo semelhante à imagem */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: url('../imagens/Elevar\ nossa\ empresa\ a\ outro\ patamar\ \(1\)_page-0001\ \(2\).jpg') no-repeat center center/cover;
+  min-height: 100vh;
+  background: linear-gradient(to right, #393a3b, #393a3b);
+  padding: 20px;
+  
 }
 
+/* Container principal */
 .form-box {
-  background: #f2f2f2;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  width: 450px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 15px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
+/* Perguntas estilo accordion */
 .pergunta {
-  background: #6a8f3f;
-  color: #fff;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 8px;
+  background-color: #e5eaf1;
+  padding: 15px 20px;
+  margin-bottom: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s;
 }
 
-.pergunta span {
-  font-size: 14px;
+.pergunta:hover {
+  background-color: #d2d9e3;
 }
 
+/* Respostas ocultas inicialmente */
 .respostas {
   display: none;
-  padding: 12px;
-  background: #e0e0e0;
-  border-radius: 8px;
-  margin: -5px 0 10px 0;
-  animation: abrir 0.3s ease;
+  padding: 10px 20px 15px 20px;
+  margin-bottom: 15px;
+  background-color: #f9faff;
+  border-radius: 10px;
+  border: 1px solid #e0e4e8;
 }
 
-.respostas label {
+/* Inputs */
+input[type="text"],
+input[type="password"],
+input[type="radio"],
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+label {
   display: block;
-  margin: 6px 0;
+  margin-bottom: 8px;
   cursor: pointer;
 }
 
-/* Botão */
-button {
-  margin-top: 20px;
-  padding: 12px;
-  width: 100%;
-  border: none;
-  border-radius: 25px;
-  background: #6a8f3f;
+/* Campos "outros" */
+.campo-outros {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: calc(100% - 20px);
+}
+
+/* Botão enviar */
+button[type="submit"] {
+  background-color: #555551; /* tom de roxo suave */
   color: #fff;
+  padding: 12px 25px;
   font-size: 16px;
   font-weight: bold;
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  width: 100%;
 }
 
-button:hover {
-  background: #4f6b2f;
+button[type="submit"]:hover {
+  background-color: #99999b;
 }
 
-/* Animação suave ao abrir */
-@keyframes abrir {
-  from {opacity: 0; transform: translateY(-5px);}
-  to {opacity: 1; transform: translateY(0);}
+/* Abrindo respostas */
+.respostas.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
 }
+
+/* Animação */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* Scroll caso o conteúdo ultrapasse o container */
+.form-box {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
