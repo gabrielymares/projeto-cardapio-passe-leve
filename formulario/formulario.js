@@ -96,6 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         
-        window.location.href = "../paginainicial/paginainicial.html";
+        window.location.href = "../avaliacao/avaliacao.html";
     });
 });

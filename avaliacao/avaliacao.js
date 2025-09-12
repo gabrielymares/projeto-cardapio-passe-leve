@@ -1,128 +1,108 @@
 document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.getElementById('formulario-avaliacao');
 
-    formulario.addEventListener('submit', (event) => {
-        event.preventDefault();
+    formulario.addEventListener('submit', (e) => {
+        e.preventDefault();
 
         if (!validarFormulario()) return;
 
-        const reverterLoading = mostrarLoading();
+        const reverter = mostrarLoading();
 
         // ===== COLETAR DADOS =====
         let pontuacaoTotal = 0;
         let temCondicaoIntestinal = false;
         let temCondicaoMetabolica = false;
 
-        const alimentacaoElement = document.querySelector('input[name="p1"]:checked');
-        const habitosElement = document.querySelector('input[name="p3"]:checked');
+        // Pontuação radio
+        document.querySelectorAll('#formulario-avaliacao input[type="radio"]:checked').forEach(r => {
+            pontuacaoTotal += parseInt(r.value);
+        });
 
-        pontuacaoTotal += parseInt(alimentacaoElement.value);
-        pontuacaoTotal += parseInt(habitosElement.value);
-
+        // Alergias e restrições
         const alergias = Array.from(document.querySelectorAll('input[name="alergia"]:checked')).map(cb => cb.value);
         const restricoes = Array.from(document.querySelectorAll('input[name="restricao"]:checked')).map(cb => cb.value);
 
         if (alergias.includes('leite') || alergias.includes('gluten')) temCondicaoIntestinal = true;
-        if (restricoes.includes('gluten') || restricoes.includes('diabetes') || restricoes.includes('hipertensao')) temCondicaoMetabolica = true;
+        if (restricoes.includes('diabetes') || restricoes.includes('hipertensao') || restricoes.includes('gluten')) temCondicaoMetabolica = true;
 
-        // ===== CLASSIFICAÇÃO =====
-        let grupoUsuario = '';
+        // Classificação
+        let grupo = '';
+        if (temCondicaoIntestinal) grupo = 'Grupo 2 – Condições Intestinais';
+        else if (temCondicaoMetabolica) grupo = 'Grupo 1 – Condições Metabólicas';
+        else if (pontuacaoTotal >= 40) grupo = 'Grupo 3 – Estilo de Vida Saudável';
+        else if (pontuacaoTotal >= 25) grupo = 'Grupo 2 – Condições Intestinais';
+        else grupo = 'Grupo 1 – Condições Metabólicas';
 
-        if (temCondicaoIntestinal) {
-            grupoUsuario = 'Grupo 2 – Condições Intestinais';
-        } else if (temCondicaoMetabolica) {
-            grupoUsuario = 'Grupo 1 – Condições Metabólicas';
-        } else if (pontuacaoTotal >= 15) {
-            grupoUsuario = 'Grupo 3 – Estilo de Vida Saudável';
-        } else if (pontuacaoTotal >= 10) {
-            grupoUsuario = 'Grupo 2 – Condições Intestinais';
-        } else {
-            grupoUsuario = 'Grupo 1 – Condições Metabólicas';
-        }
-
-        const alergiaOutros = document.querySelector('input[name="alergia_outros"]')?.value || '';
-        const restricaoOutros = document.querySelector('input[name="restricao_outros"]')?.value || '';
-
-        const dadosCompletos = {
+        const dados = {
             pontuacao: pontuacaoTotal,
-            grupo: grupoUsuario,
+            grupo: grupo,
             alergias: alergias.filter(a => a !== 'nenhuma'),
             restricoes: restricoes.filter(r => r !== 'nenhuma'),
-            alergiaOutros,
-            restricaoOutros,
+            alergiaOutros: document.querySelector('input[name="alergia_outros"]')?.value || '',
+            restricaoOutros: document.querySelector('input[name="restricao_outros"]')?.value || '',
             timestamp: new Date().toISOString()
         };
 
-        sessionStorage.setItem('resultadoAvaliacao', JSON.stringify(dadosCompletos));
+        sessionStorage.setItem('resultadoAvaliacao', JSON.stringify(dados));
 
-        // Redirecionamento
         setTimeout(() => {
+            reverter();
             window.location.href = "../pontuacao/pontuacao.html";
         }, 500);
     });
 });
 
-// ===== FUNÇÕES AUXILIARES =====
+// Funções auxiliares
+function abrirAba(evt, nomeAba) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    document.getElementById(nomeAba).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}
+
 function toggleResposta(element) {
     const respostas = element.nextElementSibling;
     respostas.style.display = respostas.style.display === 'block' ? 'none' : 'block';
 }
 
-function marcarNenhuma(nenhumaCheckbox) {
-    const checkboxes = document.querySelectorAll('input[name="' + nenhumaCheckbox.name + '"]');
-    if (nenhumaCheckbox.checked) {
-        checkboxes.forEach(cb => { if (cb !== nenhumaCheckbox) cb.checked = false; });
-    }
+function marcarNenhuma(cb) {
+    document.querySelectorAll(`input[name="${cb.name}"]`).forEach(i => {
+        if (i !== cb) {
+            i.checked = false;
+            const campo = i.parentElement.querySelector('.campo-outros');
+            if (campo) campo.style.display = 'none';
+        }
+    });
 }
 
-function mostrarCampoOutros(outrosCheckbox) {
-    const campo = outrosCheckbox.parentElement.querySelector('.campo-outros');
-    campo.style.display = outrosCheckbox.checked ? 'inline-block' : 'none';
-    if (outrosCheckbox.checked) campo.focus();
+function mostrarCampoOutros(cb) {
+    const campo = cb.parentElement.querySelector('.campo-outros');
+    campo.style.display = cb.checked ? 'inline-block' : 'none';
+    if (cb.checked) campo.focus();
 }
 
-// ===== FUNÇÕES DE VALIDAÇÃO E FEEDBACK =====
 function validarFormulario() {
-    const perguntas = [
-        { name: 'p1', label: 'alimentação saudável' },
-        { name: 'p3', label: 'hábitos de saúde' }
-    ];
+    const radios = document.querySelectorAll('#formulario-avaliacao input[type="radio"]');
+    const grupos = {};
+    radios.forEach(r => { grupos[r.name] = grupos[r.name] || false; if (r.checked) grupos[r.name] = true; });
+    for (let g in grupos) if (!grupos[g]) { alert('Responda todas as perguntas!'); return false; }
 
-    for (let pergunta of perguntas) {
-        if (!document.querySelector(`input[name="${pergunta.name}"]:checked`)) {
-            alert(`Por favor, responda sobre sua ${pergunta.label}`);
-            return false;
-        }
-    }
+    const checkboxes = document.querySelectorAll('#formulario-avaliacao input[type="checkbox"]');
+    const gruposCb = {};
+    checkboxes.forEach(c => { gruposCb[c.name] = gruposCb[c.name] || false; if (c.checked) gruposCb[c.name] = true; });
+    for (let g in gruposCb) if (!gruposCb[g]) { alert('Marque pelo menos uma opção para cada pergunta!'); return false; }
 
-    if (!document.querySelector('input[name="alergia"]:checked') ||
-        !document.querySelector('input[name="restricao"]:checked')) {
-        alert('Por favor, marque suas alergias e restrições (pode ser "Nenhuma")');
-        return false;
-    }
-
-    const outrosCheckboxes = document.querySelectorAll('input[value="outros"]:checked');
-    for (let cb of outrosCheckboxes) {
-        const campoTexto = cb.parentElement.querySelector('.campo-outros');
-        if (!campoTexto.value.trim()) {
-            alert('Por favor, especifique o campo "Outros"');
-            campoTexto.focus();
-            return false;
-        }
-    }
+    const outros = document.querySelectorAll('input[value="outros"]:checked');
+    for (let o of outros) { const campo = o.parentElement.querySelector('.campo-outros'); if (!campo.value.trim()) { alert('Preencha o campo "Outros"!'); campo.focus(); return false; } }
 
     return true;
 }
 
 function mostrarLoading() {
-    const botao = document.querySelector('button[type="submit"]');
-    const textoOriginal = botao.innerHTML;
+    const botao = document.querySelector('#formulario-avaliacao button[type="submit"]');
+    const texto = botao.innerHTML;
     botao.innerHTML = 'Processando... ⏳';
     botao.disabled = true;
     botao.style.opacity = '0.7';
-    return () => {
-        botao.innerHTML = textoOriginal;
-        botao.disabled = false;
-        botao.style.opacity = '1';
-    };
+    return () => { botao.innerHTML = texto; botao.disabled = false; botao.style.opacity = '1'; };
 }

@@ -1,117 +1,139 @@
-/* Reset básico */
+/* ===== RESET ===== */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Body e fundo */
+/* ===== BODY ===== */
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(to right, #393a3b, #393a3b);
-  padding: 20px;
-  
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* cinza escuro */
+    color: #000000; /* texto branco */
+    line-height: 1.6;
+    padding: 20px;
 }
 
-/* Container principal */
-.form-box {
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 30px 40px;
-  border-radius: 15px;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+/* ===== CONTAINER ===== */
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #2a2a2a; /* cinza médio */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
-/* Perguntas estilo accordion */
+/* ===== HEADER ===== */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+header h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+header p {
+    font-size: 16px;
+    color: #cccccc;
+}
+
+/* ===== ABAS ===== */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.tab-button {
+    background: #3a3a3a;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    transition: background 0.3s;
+}
+.tab-button:hover {
+    background: #555;
+}
+.tab-button.active {
+    background: #ffffff;
+    color: #1e1e1e;
+    font-weight: bold;
+}
+
+/* ===== CONTEÚDO DAS ABAS ===== */
+.tab-content {
+    display: none;
+    background: #afafaf;
+    padding: 20px;
+    border-radius: 0 0 10px 10px;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* ===== PERGUNTAS ===== */
 .pergunta {
-  background-color: #e5eaf1;
-  padding: 15px 20px;
-  margin-bottom: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.3s;
+    background: #ffffff;
+    padding: 12px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.pergunta span {
+    font-size: 14px;
+    color: #aaa;
+}
+.pergunta.ativa {
+    background: #555;
 }
 
-.pergunta:hover {
-  background-color: #d2d9e3;
-}
-
-/* Respostas ocultas inicialmente */
+/* ===== RESPOSTAS ===== */
 .respostas {
-  display: none;
-  padding: 10px 20px 15px 20px;
-  margin-bottom: 15px;
-  background-color: #f9faff;
-  border-radius: 10px;
-  border: 1px solid #e0e4e8;
+    display: none;
+    margin: 10px 0 15px 20px;
+    padding: 10px;
+    background: #f3f3f3;
+    border-radius: 5px;
 }
-
-/* Inputs */
-input[type="text"],
-input[type="password"],
-input[type="radio"],
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
-
-/* Campos "outros" */
-.campo-outros {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  width: calc(100% - 20px);
-}
-
-/* Botão enviar */
-button[type="submit"] {
-  background-color: #555551; /* tom de roxo suave */
-  color: #fff;
-  padding: 12px 25px;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 10px;
-  width: 100%;
-}
-
-button[type="submit"]:hover {
-  background-color: #99999b;
-}
-
-/* Abrindo respostas */
 .respostas.active {
-  display: block;
-  animation: fadeIn 0.3s ease;
+    display: block;
+}
+.respostas label {
+    display: block;
+    margin: 5px 0;
+    cursor: pointer;
 }
 
-/* Animação */
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+/* ===== BOTÕES ===== */
+button[type="submit"] {
+    background: #ffffff;
+    color: #b8b8b8;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+button[type="submit"]:hover {
+    background: #cccccc;
 }
 
-/* Scroll caso o conteúdo ultrapasse o container */
-.form-box {
-  max-height: 90vh;
-  overflow-y: auto;
+/* ===== CAMPO OUTROS ===== */
+.campo-outros {
+    margin-left: 5px;
+    padding: 5px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #2a2a2a;
+    color: #fff;
 }
-
