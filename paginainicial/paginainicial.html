@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Passe Leve</title>
-    <link rel="stylesheet" href="./paginainicial.css">
+    <link rel="stylesheet" href="paginainicial.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -17,18 +17,18 @@
 
     <div class="page-container">
         <aside class="sidebar">
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-link active">Inicial</a>
-                <a href="#" class="nav-link">Perfil</a>
-            </nav>
+           <div class="button-container">
+            <a href="../paginainicial/paginainicial.html" class="button">Inicial</a>
+            <a href="../perfil/perfil.html"  class="button">Perfil</a>
+           </div>
             <div class="logo-placeholder">
-                <img src="logo.png" alt="Logo Passe Leve">
+                <img src="Logo.jpg" alt="Logo Passe Leve">
             </div>
         </aside>
 
         <main class="main-content">
             <div class="content-header">
-                <h2>Semana 1-3</h2>
+                <h2 id="semana-atual-titulo">Carregando semana...</h2>  </h2>
                 <h3>INTRODUÇÃO</h3>
             </div>
 
@@ -51,7 +51,7 @@
                 
                 <div class="side-info">
                     <div class="score-box">
-                        <p>Pontuação 7/22</p>
+                        <p>Pontuação <span id="pontuacao-usuario">--</span> / <span id="pontuacao-total">--</span></p>
                     </div>
                     <div class="conditions-list">
                         <ul>
@@ -63,6 +63,6 @@
         </main>
     </div>
 
-    <script src="./paginainicial.js"></script>
+    <script src="paginainicial.js"></script>
 </body>
 </html>

@@ -73,10 +73,14 @@ body {
 .logo-placeholder {
     display: flex;
     justify-content: center;
+    /* Espaçamento para o logo não grudar nos botões */
+    margin-top: 20px;
 }
 
 .logo-placeholder img {
+    /* Garante que o logo se ajuste ao contêiner, com tamanho máximo de 100px */
     max-width: 100px;
+    height: auto;
 }
 
 .main-content {
@@ -102,6 +106,32 @@ body {
 .content-body {
     display: flex;
     gap: 30px;
+}
+
+.button-container {
+    display: flex; 
+    flex-direction: column;
+    gap: 10px; 
+    margin-top: 20px;
+}
+
+.button { 
+    text-decoration: none; 
+    padding: 12px 24px; 
+    background-color: var(--box-bg-color); 
+    color: var(--text-color); 
+    border-radius: 5px; 
+    font-weight: bold; 
+    transition: background-color 0.3s ease; 
+}
+
+.button:hover {
+    background-color: var(--sidebar-gradient-start); 
+}
+
+.button.active {
+    background-color: var(--active-link-color);
+    color: var(--dark-gray-color);
 }
 
 .tasks-container {
@@ -153,4 +183,28 @@ body {
 
 .conditions-list ul {
     list-style: none;
+}
+
+/* Novo CSS para a página de perfil */
+.profile-card {
+    background-color: var(--box-bg-color);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card h2 {
+    font-size: 1.5em;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.profile-info p {
+    font-size: 1.1em;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+.profile-info strong {
+    font-weight: 600;
 }
