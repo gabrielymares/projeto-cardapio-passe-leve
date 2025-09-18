@@ -8,11 +8,20 @@
 /* ===== BODY ===== */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0; /* cinza escuro */
-    color: #000000; /* texto branco */
+    background-color: #f0f0f0;
+    color: #000000;
     line-height: 1.6;
-    padding: 20px;
+    
+    /* REMOVE esse padding se não quiser espaço extra */
+    margin: 0;
+    height: 100vh; /* altura total da tela */
+    
+    display: flex;
+    justify-content: center; /* centraliza na horizontal */
+    align-items: center;     /* centraliza na vertical */
+    background-color: #f0f0f0;
 }
+
 
 /* ===== CONTAINER ===== */
 .container {

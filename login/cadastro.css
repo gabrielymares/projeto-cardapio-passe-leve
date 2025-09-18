@@ -60,12 +60,14 @@ body {
 }
 
 .logo {
-  max-width: 300px;
+  width: 300px;  /* aumenta para 300px de largura */
+  height: auto;  /* mantém proporção */
   margin-bottom: 20px;
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
+
 
 /* Tabs */
 .tab-buttons {
@@ -79,7 +81,8 @@ body {
   padding: 10px 0;
   border: none;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: normal;   
+  font-size: 1rem;       
   border-radius: 8px;
   margin: 0 5px;
   background: #ddd;
@@ -89,9 +92,9 @@ body {
 
 .tab.active {
   background: #555551;
-  color: white;
-}
-
+  color: #dddddd;
+  font-weight: normal;   
+ }
 /* Inputs */
 input {
   display: block;
@@ -101,7 +104,7 @@ input {
   border: none;
   border-radius: 8px;
   background: #555551;
-  color: white;
+  color: #dddddd;
   font-size: 1rem;
 }
 
