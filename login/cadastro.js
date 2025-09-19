@@ -7,9 +7,10 @@ const cadastroInput = document.getElementById("cadastroInput");
 const btnEnviarLogin = document.getElementById("btnEnviarLogin");
 const loginInput = document.getElementById("loginInput");
 
-// Adicionei estas constantes para os campos de senha
+// Novas constantes para os campos de senha
 const senhaCadastroInput = document.getElementById("senhaCadastroInput");
 const confirmarSenhaInput = document.getElementById("confirmarSenhaInput");
+const senhaLoginInput = document.getElementById("senhaLoginInput"); 
 
 // ==== Funções de máscara para o contato ====
 
@@ -68,12 +69,24 @@ btnLogin.addEventListener("click", () => showTab("login"));
 btnEnviarCadastro.addEventListener("click", (e) => {
   e.preventDefault();
 
-  // O ponto chave: validação para garantir que as senhas são idênticas
+  // NOVO: Verificação de campos vazios para o cadastro
+  if (!cadastroInput.value.trim() || !senhaCadastroInput.value.trim() || !confirmarSenhaInput.value.trim()) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+  }
+
   if (senhaCadastroInput.value !== confirmarSenhaInput.value) {
     alert("As senhas não coincidem. Por favor, tente novamente.");
-    return; // Interrompe a execução se as senhas não combinarem
+    return;
   }
   
+  const dadosUsuario = {
+    contato: cadastroInput.value,
+    senha: senhaCadastroInput.value
+  };
+
+  localStorage.setItem('dadosUsuario', JSON.stringify(dadosUsuario));
+
   alert("Cadastro realizado com sucesso!");
   showTab("login");
 });
@@ -93,10 +106,22 @@ addMaskListeners(loginInput);
 
 // Ao clicar em 'Entrar', salva o contato e redireciona
 btnEnviarLogin.addEventListener("click", () => {
-  const contato = loginInput.value;
-  const dadosExistentes = JSON.parse(localStorage.getItem('dadosUsuario')) || {};
-  dadosExistentes.contato = contato;
-  localStorage.setItem('dadosUsuario', JSON.stringify(dadosExistentes));
 
-  window.location.href = "../formulario/formulario.html";
+  // NOVO: Verificação de campos vazios para o login
+  if (!loginInput.value.trim() || !senhaLoginInput.value.trim()) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+  }
+
+  const dadosExistentes = JSON.parse(localStorage.getItem('dadosUsuario')) || {};
+  
+  const contatoDigitado = loginInput.value;
+  const senhaDigitada = senhaLoginInput.value;
+
+  if (dadosExistentes.contato === contatoDigitado && dadosExistentes.senha === senhaDigitada) {
+      alert("Login realizado com sucesso!");
+      window.location.href = "./formulario/formulario.html";
+  } else {
+      alert("Credenciais inválidas. Verifique seu email/telefone e senha.");
+  }
 });

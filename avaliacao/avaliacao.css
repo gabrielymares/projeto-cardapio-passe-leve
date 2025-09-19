@@ -8,7 +8,7 @@
 /* ===== BODY ===== */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     color: #000000;
     line-height: 1.6;
     
@@ -27,7 +27,7 @@ body {
 .container {
     max-width: 900px;
     margin: auto;
-    background: #2a2a2a; /* cinza médio */
+    background: #8fa248; /* cinza médio */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
@@ -69,14 +69,14 @@ header p {
 }
 .tab-button.active {
     background: #ffffff;
-    color: #1e1e1e;
+    color: #22291f;
     font-weight: bold;
 }
 
 /* ===== CONTEÚDO DAS ABAS ===== */
 .tab-content {
     display: none;
-    background: #afafaf;
+    background: #7c8d3e;
     padding: 20px;
     border-radius: 0 0 10px 10px;
 }
@@ -107,7 +107,7 @@ header p {
 /* ===== RESPOSTAS ===== */
 .respostas {
     display: none;
-    margin: 10px 0 15px 20px;
+    margin: 10px 0 15px 0;  /* MUDOU: removido o 20px da esquerda */
     padding: 10px;
     background: #f3f3f3;
     border-radius: 5px;
@@ -120,7 +120,6 @@ header p {
     margin: 5px 0;
     cursor: pointer;
 }
-
 /* ===== BOTÕES ===== */
 button[type="submit"] {
     background: #ffffff;
@@ -143,6 +142,6 @@ button[type="submit"]:hover {
     padding: 5px;
     border: 1px solid #555;
     border-radius: 4px;
-    background: #2a2a2a;
+    background: #a0a0a0;
     color: #fff;
 }

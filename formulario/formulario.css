@@ -30,10 +30,9 @@ body, html {
 }
 
 .form-container {
-    background-color: #dcdcdc;
+    background-color: #dfeddc;
     padding: 30px 20px;
     border-radius: 20px;
-    box-shadow: 0 4px 10px #8fa248;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,7 +41,7 @@ body, html {
 
 .form-title {
     font-size: 1.5em;
-    color: #555;
+    color: #8fa248;
     margin-bottom: 20px;
 }
 
@@ -81,7 +80,7 @@ select:invalid {
     padding: 15px;
     border: none;
     border-radius: 10px;
-    background-color: #555551;
+    background-color: #8fa248;
     color: white;
     font-size: 1.1em;
     font-weight: bold;
