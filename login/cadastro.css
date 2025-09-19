@@ -20,7 +20,7 @@ body {
 /* Metade esquerda */
 .left-panel {
   flex: 1;
-  background: #555551; /* cinza */
+  background: #8fa248;
   color: white;
   display: flex;
   flex-direction: column;
@@ -40,13 +40,27 @@ body {
   font-size: 0.9rem;
 }
 
-/* Metade direita */
 .right-panel {
   flex: 1;
   background: white;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  padding: 60px 40px 40px 40px; /* ← Mais espaço no topo */
+}
+
+.logo {
+  width: 250px; /* ← Tamanho maior */
+  height: auto;
+  margin-bottom: 30px;
+}
+
+/* Logo fora do container */
+.logo {
+  width: 500px;
+  height: auto;
+  margin-bottom: 30px;
+  display: block;
 }
 
 /* Caixa de login */
@@ -58,16 +72,6 @@ body {
   text-align: center;
   width: 350px;
 }
-
-.logo {
-  width: 300px;  /* aumenta para 300px de largura */
-  height: auto;  /* mantém proporção */
-  margin-bottom: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 
 /* Tabs */
 .tab-buttons {
@@ -86,15 +90,16 @@ body {
   border-radius: 8px;
   margin: 0 5px;
   background: #ddd;
-  color: #333;
+  color: #535a3a;
   transition: 0.3s;
 }
 
 .tab.active {
-  background: #555551;
+  background: #8fa248;
   color: #dddddd;
   font-weight: normal;   
- }
+}
+
 /* Inputs */
 input {
   display: block;
@@ -103,7 +108,7 @@ input {
   margin: 10px 0;
   border: none;
   border-radius: 8px;
-  background: #555551;
+  background: #8fa248;
   color: #dddddd;
   font-size: 1rem;
 }
@@ -118,7 +123,7 @@ input::placeholder {
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background: #555551;
+  background: #8fa248;
   color: white;
   font-size: 1rem;
   cursor: pointer;
@@ -126,7 +131,7 @@ input::placeholder {
 }
 
 .submit:hover {
-  background: #333;
+  background: #4c532c;
 }
 
 .form {
@@ -135,4 +140,28 @@ input::placeholder {
 
 .form.active {
   display: block;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .left-panel {
+    flex: none;
+    min-height: 30vh;
+  }
+  
+  .right-panel {
+    flex: none;
+    min-height: 70vh;
+  }
+  
+  .login-box {
+    width: 90%;
+    max-width: 350px;
+  }
 }

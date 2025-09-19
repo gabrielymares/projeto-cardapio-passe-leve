@@ -8,44 +8,37 @@
 </head>
 <body>
   <div class="container">
-   
     <div class="left-panel">
       <h1>Seja Bem Vindo(a) ao<br>Passe Leve!</h1>
       <p class="sub">PLANO DE ADAPTAÇÃO PROGRESSIVA DE HÁBITOS ALIMENTARES</p>
     </div>
 
-   
     <div class="right-panel">
-      <div class="login-box">
+      <!-- Logo movida para fora do login-box -->
+      <img src="../imagens/logobranca.png" alt="Logo Passe Leve" class="logo">
       
-        <img src="../imagens/logobranca.png" alt="Logo Passe Leve" class="logo">
-
-        
+      <div class="login-box">
         <div class="tab-buttons">
           <button class="tab active" id="btnCadastro">Cadastro</button>
           <button class="tab" id="btnLogin">Login</button>
         </div>
 
-        
         <div id="formCadastro" class="form active">
-          <input type="text" id="cadastroInput" placeholder="Email ou Telefone">
-          <input type="password" placeholder="Senha">
+          <input type="text" id="cadastroInput" placeholder="Email/Telefone">
+          <input type="password" placeholder="Senha:">
           <button class="submit" id="btnEnviarCadastro">Enviar</button>
         </div>
 
-        <!-- Formulário de login -->
-    
-<div id="formLogin" class="form">
-  <input type="text" placeholder="Email ou Telefone">
-
-      
-          <input type="password" placeholder="Senha">
+        <div id="formLogin" class="form">
+          <input type="text" id="loginInput" placeholder="Email/Telefone">
+          <input type="password" placeholder="Senha:">
           <button class="submit" id="btnEnviarLogin">Entrar</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Link para o arquivo JS externo -->
   <script src="./cadastro.js"></script>
 </body>
 </html>

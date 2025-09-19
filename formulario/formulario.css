@@ -33,7 +33,7 @@ body, html {
     background-color: #dcdcdc;
     padding: 30px 20px;
     border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px #8fa248;
     display: flex;
     flex-direction: column;
     align-items: center;
