@@ -48,6 +48,41 @@ header p {
     color: #cccccc;
 }
 
+/* Estilo geral do botão/link */
+.back-button-arrow {
+    /* Cores e tipografia (ajuste conforme seu tema) */
+    background-color: #8fa248; /* Seu verde principal */
+    color: white; 
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 15px 10px 30px; /* Mais padding à esquerda para a seta */
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    
+    /* Posição da seta */
+    position: relative; 
+}
+
+/* Efeito de hover */
+.back-button-arrow:hover {
+    background-color: #4c532c; /* Seu verde de hover */
+}
+
+/* CRIAÇÃO DA SETA (o triângulo) */
+.back-button-arrow::before {
+    content: '';
+    position: absolute;
+    left: 10px; /* Distância da borda esquerda */
+    
+    /* Cria o formato de triângulo */
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    /* A cor da seta é na verdade a cor do fundo do botão, criando um corte */
+    border-right: 5px solid white; 
+}
+
 /* ===== ABAS ===== */
 .tabs {
     display: flex;

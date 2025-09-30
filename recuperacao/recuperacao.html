@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passe Leve - Recuperar Senha</title>
+    <link rel="stylesheet" href="recuperacao.css"> 
+    </head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <h1>Recuperação de Acesso</h1>
+            <p class="sub">Recupere seu acesso para continuar com seu Plano Passe Leve.</p>
+        </div>
+
+        <div class="right-panel">
+            <div class="login-box">
+                <img src="../imagens/logobranca.png" alt="Logo Passe Leve" class="logo">
+                
+                <h3>Esqueci minha senha</h3>
+
+                <div id="etapa1" class="form active">
+                    <p class="instruction">Informe seu e-mail ou telefone de cadastro:</p>
+                    <input type="text" id="recuperarContato" placeholder="Email ou Telefone">
+                    <button class="submit" id="btnGerarCodigo">Gerar Código de Acesso</button>
+                    <a href="../login/cadastro.html" class="forgot-password-link">Voltar para o Login</a>
+                </div>
+
+                <div id="etapa2" class="form">
+                    <p class="instruction">Um código de 4 dígitos foi enviado. Digite-o abaixo e defina sua nova senha.</p>
+                    
+                    <input type="text" id="codigoVerificacao" placeholder="Código de 4 dígitos">
+                    <input type="password" id="novaSenha" placeholder="Nova Senha">
+                    <input type="password" id="confirmarNovaSenha" placeholder="Confirme a Nova Senha">
+                    
+                    <button class="submit" id="btnRedefinirSenha">Redefinir Senha</button>
+                    <a href="#" id="btnReenviar" class="forgot-password-link" style="text-align: center;">Reenviar Código</a>
+                </div>
+
+                <p id="mensagem" style="margin-top: 15px; color: #3489e9; font-weight: bold;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="recuperacao.js"></script>
+</body>
+</html>

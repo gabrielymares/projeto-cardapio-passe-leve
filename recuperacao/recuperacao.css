@@ -1,0 +1,246 @@
+/* Variáveis de Cores: Facilita a manutenção */
+:root {
+    --primary-color: #8fa248; /* O verde principal (do seu projeto) */
+    --secondary-color: #4c532c; /* Verde mais escuro para hover/detalhes */
+    --background-light: #f9f9f9; /* Fundo geral */
+    --box-background: #ffffff; /* Fundo da caixa de login */
+    --text-color: #333333;
+    --placeholder-color: rgba(255, 255, 255, 0.7);
+    --placeholder-focus: #dddddd;
+}
+
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Assumindo que você está usando Poppins */
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--background-light); /* Cor de fundo suave */
+}
+
+/* Container principal dividido */
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Metade esquerda (Painel de Boas-vindas) */
+.left-panel {
+    flex: 1.2; /* Dando um pouco mais de espaço para o lado verde */
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    /* Adicionando um leve gradiente para profundidade */
+    background: linear-gradient(135deg, var(--primary-color), #a2b85a); 
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.left-panel h1 {
+    font-size: 2.8rem; /* Aumentado para mais destaque */
+    margin-bottom: 25px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.left-panel .sub {
+    font-weight: 500;
+    font-size: 1.0rem; /* Um pouco maior */
+    opacity: 0.9;
+}
+
+.right-panel {
+    flex: 1;
+    background: var(--background-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centraliza verticalmente o login-box */
+    padding: 20px;
+}
+
+/* Caixa de login (Card) */
+.login-box {
+    background: var(--box-background);
+    padding: 40px 30px;
+    border-radius: 15px; /* Bordas arredondadas suaves */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Sombra mais destacada e moderna */
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Largura máxima para não esticar muito */
+    margin: 0; /* Centralização feita pelo right-panel */
+}
+
+/* Logo */
+.logo {
+    width: 350px; /* Levemente reduzido para caber melhor */
+    height: auto;
+    margin-bottom: 35px;
+    display: block;
+}
+
+/* Título de Recuperação de Senha */
+.login-box h3 {
+    text-align: center;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Instruções */
+.login-box .instruction {
+    font-size: 0.9em;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+/* Tabs */
+.tab-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px; /* Mais espaço */
+    border-bottom: 2px solid #ddd; /* Linha sutil de separação */
+}
+
+.tab {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    cursor: pointer;
+    font-weight: 600; 
+    font-size: 1.05rem; 
+    margin: 0 5px;
+    background: transparent; /* Fundo transparente para o efeito de aba */
+    color: #999;
+    transition: all 0.3s ease-in-out;
+    border-bottom: 3px solid transparent; /* Linha inativa */
+}
+
+.tab.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color); /* Linha ativa com cor principal */
+    background: transparent;
+}
+
+.tab:hover:not(.active) {
+    color: var(--secondary-color);
+}
+
+/* Inputs */
+input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 15px 0; /* Aumenta a margem para separar os campos */
+    border: 1px solid #ddd; /* Adiciona borda sutil */
+    border-radius: 8px; 
+    background: var(--primary-color); /* Mantém o fundo verde */
+    color: white; 
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+input::placeholder {
+    color: var(--placeholder-color);
+}
+
+/* Efeito de Foco (Melhora a usabilidade) */
+input:focus {
+    outline: none;
+    background: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(143, 162, 72, 0.4); /* Sombra de foco no verde */
+    color: var(--placeholder-focus);
+}
+
+/* Botão submit */
+.submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: white;
+    font-size: 1.1rem; /* Um pouco maior */
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 25px; /* Mais espaço antes do botão */
+    transition: background 0.3s, transform 0.1s;
+}
+
+.submit:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px); /* Pequeno efeito de elevação */
+}
+
+/* Link Esqueci a Senha / Voltar para Login */
+.forgot-password-link {
+    display: block; 
+    text-align: right;
+    font-size: 0.85em;
+    color: #777; /* Cor mais neutra */
+    text-decoration: none;
+    margin-top: 5px; 
+    margin-bottom: 15px; 
+    transition: color 0.3s;
+}
+
+.forgot-password-link:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* Estilos de Formulário (Alternância) */
+.form {
+    display: none;
+    animation: fadeIn 0.5s ease; /* Adiciona uma transição suave */
+}
+
+.form.active {
+    display: block;
+}
+
+/* Animação para a transição das abas */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsivo */
+@media (max-width: 992px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .left-panel {
+        flex: none;
+        min-height: 25vh; /* Painel esquerdo menor no mobile */
+        padding: 30px 20px;
+    }
+    
+    .left-panel h1 {
+        font-size: 2rem;
+    }
+    
+    .right-panel {
+        flex: none;
+        min-height: 75vh;
+        padding: 40px 20px;
+    }
+    
+    .login-box {
+        width: 100%;
+        max-width: 450px;
+        margin-top: 0; 
+    }
+}
