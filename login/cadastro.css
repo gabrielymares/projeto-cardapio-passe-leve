@@ -49,15 +49,13 @@ body {
     padding: 60px 40px 40px 40px; 
 }
 
-/* Logo ÚNICA e com tamanho adequado para o container */
 .logo {
-    width: 300px; /* Tamanho que cabe dentro do login-box */
+    width: 300px; 
     height: auto;
     margin-bottom: 30px;
-    display: block; /* Garante que ocupe a linha inteira para centralizar */
+    display: block; 
 }
 
-/* Caixa de login */
 .login-box {
     background: #eeeeee;
     padding: 40px 30px;
@@ -68,7 +66,6 @@ body {
     margin-top: 100px;
 }
 
-/* Tabs */
 .tab-buttons {
     display: flex;
     justify-content: center;
@@ -95,7 +92,6 @@ body {
     font-weight: normal; 
 }
 
-/* Inputs */
 input {
     display: block;
     width: 100%;
@@ -112,7 +108,6 @@ input::placeholder {
     color: #ddd;
 }
 
-/* Botão enviar */
 .submit {
     width: 100%;
     padding: 12px;
@@ -137,23 +132,6 @@ input::placeholder {
     display: block;
 }
 
-.forgot-password-link {
-    display: block; /* Ocupa a largura total para alinhamento */
-    text-align: right;
-    font-size: 0.9em;
-    color: #535a3a; /* Cor mais escura para ser legível no fundo cinza */
-    text-decoration: none;
-    margin-top: -5px; /* Ajusta a margem para ficar mais perto do input de senha */
-    margin-bottom: 10px; /* Adiciona espaço antes do botão */
-    transition: color 0.3s;
-}
-
-.forgot-password-link:hover {
-    color: #4068ec; /* Escurece no hover */
-    text-decoration: underline;
-}
-
-/* Responsivo */
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
