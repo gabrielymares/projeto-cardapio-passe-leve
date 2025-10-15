@@ -1,20 +1,3 @@
-// Variáveis globais
-let diaAtual = null;
-let refeicaoEditando = null;
-let semanaAtual = 1;
-let clienteAtual = null;
-
-// Inicializar página
-document.addEventListener('DOMContentLoaded', () => {
-    // Pegar semana da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    semanaAtual = parseInt(urlParams.get('semana')) || 1;
-    clienteAtual = parseInt(urlParams.get('cliente')) || 0;
-    
-    document.getElementById('tituloSemana').textContent = `Semana ${semanaAtual}`;
-    
-    renderizarDias();
-});
 
 // Renderizar todos os dias da semana
 function renderizarDias() {
@@ -30,48 +13,15 @@ function renderizarDias() {
 // Criar card de um dia
 function criarCardDia(numeroDia) {
     const cardapio = getCardapio();
-    const refeicoesDoDia = cardapio[`semana${semanaAtual}`]?.[`dia${numeroDia}`] || [];
+    let refeicoesDoDia = cardapio[`semana${semanaAtual}`]?.[`dia${numeroDia}`] || [];
     
-    const card = document.createElement('div');
-    card.className = 'dia-card';
-    
-    card.innerHTML = `
-        <div class="dia-header" onclick="toggleDia(${numeroDia})">
-            <h2 class="dia-titulo">DIA ${numeroDia}</h2>
-            <span class="toggle-icon" id="toggle-${numeroDia}">+</span>
-        </div>
-        <div class="conteudo-dia" id="conteudo-${numeroDia}">
-            <div class="refeicoes-list" id="refeicoes-${numeroDia}">
-                ${renderizarRefeicoes(refeicoesDoDia, numeroDia)}
-            </div>
-            <button class="btn-adicionar" onclick="abrirModal(${numeroDia})">+ Adicionar Refeição</button>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Renderizar lista de refeições
-function renderizarRefeicoes(refeicoes, dia) {
-    if (refeicoes.length === 0) {
-        return '<p class="mensagem-vazio">Nenhuma refeição cadastrada</p>';
-    }
-    
-    return refeicoes.map((ref, index) => `
-        <div class="refeicao-item">
-            <button class="btn-editar-refeicao" onclick="editarRefeicao(${dia}, ${index})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-            </button>
-            <div class="refeicao-tipo">${ref.tipo}</div>
-            <div class="refeicao-horario">Horário: ${ref.horario}</div>
-            <div class="refeicao-detalhe">Refeições: ${ref.alimento}</div>
-            <div class="refeicao-detalhe"><strong>Quantidade: ${ref.quantidade}</strong></div>
-        </div>
-    `).join('');
-}
+    // Ordena as refeições para garantir a ordem correta na renderização inicial
+    refeicoesDoDia.sort((a, b) => {
+        if (a.horario < b.horario) return -1;
+        if (a.horario > b.horario) return 1;
+        return 0;
+    });
+ }
 
 // Toggle (abrir/fechar) dia
 function toggleDia(numeroDia) {
@@ -94,7 +44,16 @@ function abrirModal(dia, refeicaoIndex = null) {
         // Modo edição
         document.getElementById('modalTitulo').textContent = 'Editar Refeição';
         const cardapio = getCardapio();
-        const refeicao = cardapio[`semana${semanaAtual}`][`dia${dia}`][refeicaoIndex];
+        
+        // Garante que o cardápio existe antes de tentar acessar
+        const refeicoes = cardapio[`semana${semanaAtual}`]?.[`dia${dia}`];
+        if (!refeicoes || !refeicoes[refeicaoIndex]) {
+             console.error("Refeição não encontrada para edição.");
+             fecharModal();
+             return;
+        }
+        
+        const refeicao = refeicoes[refeicaoIndex];
         
         document.getElementById('tipoRefeicao').value = refeicao.tipo;
         document.getElementById('horario').value = refeicao.horario;
@@ -155,12 +114,29 @@ function salvarRefeicao() {
         cardapio[`semana${semanaAtual}`][`dia${diaAtual}`].push(novaRefeicao);
     }
     
+    // Ordenar o array de refeições por horário antes de salvar
+    cardapio[`semana${semanaAtual}`][`dia${diaAtual}`].sort((a, b) => {
+        if (a.horario < b.horario) return -1;
+        if (a.horario > b.horario) return 1;
+        return 0;
+    });
+
     saveCardapio(cardapio);
     
+
     // Atualizar apenas o dia modificado
     const refeicoesContainer = document.getElementById(`refeicoes-${diaAtual}`);
     const refeicoes = cardapio[`semana${semanaAtual}`][`dia${diaAtual}`];
     refeicoesContainer.innerHTML = renderizarRefeicoes(refeicoes, diaAtual);
+    
+    // Atualizar o indicador de progresso no header do dia (busca o progresso atualizado)
+    const progressoDia = obterProgressoDia(diaAtual);
+    const diaHeader = document.querySelector(`#conteudo-${diaAtual}`).previousElementSibling;
+    const indicadorDiv = diaHeader.querySelector('div');
+    indicadorDiv.innerHTML = `
+        <h2 class="dia-titulo">DIA ${diaAtual}</h2>
+        ${renderizarIndicadorProgresso(progressoDia, refeicoes.length)}
+    `;
     
     fecharModal();
 }

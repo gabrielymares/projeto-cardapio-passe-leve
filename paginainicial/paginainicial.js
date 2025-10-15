@@ -1,348 +1,211 @@
+
+// =======================
+// INICIALIZAÇÃO
+// =======================
 document.addEventListener('DOMContentLoaded', () => {
-    // === Elementos da Página de Perfil (Dados Cadastrais) ===
-    const userNameSpan = document.getElementById('perfil-nome'); 
-    const userEmailSpan = document.getElementById('perfil-contato');
-    const userSexSpan = document.getElementById('perfil-sexo');
-    const userAgeSpan = document.getElementById('perfil-idade');
-    const userIMC = document.getElementById('perfil-imc');
+    // Buscar cliente logado
+    const clienteLogado = localStorage.getItem('clienteLogado');
+    // Garante que clienteAtual é 0 se não estiver logado, evitando chaves de localStorage inválidas
+    clienteAtual = clienteLogado ? parseInt(clienteLogado) : 0; 
+
+    if (!clienteAtual) {
+        console.warn("Nenhum cliente logado. Carregando dados genéricos (cliente 0).");
+        // window.location.href = "../login/login.html"; // Comentário mantido para forçar login
+    }
+
+    // Buscar semana atual
+    const semanaStorage = localStorage.getItem(`semanaAtual_cliente${clienteAtual}`);
+    semanaAtual = semanaStorage ? parseInt(semanaStorage) : 1;
+
+    // Calcular o dia atual
+    diaAtual = calcularDiaAtual();
+
+    // Atualizar título da página
+    atualizarTitulo();
+
+    // Carregar dados
+    carregarRefeicoesDoDia();
+    carregarCondicoes();
+    carregarPontuacao();
+});
+
+// =======================
+// FUNÇÕES PRINCIPAIS
+// =======================
+
+// Atualizar o título com semana e dia
+function atualizarTitulo() {
+    const diasSemana = ['', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
+    const nomeDia = diasSemana[diaAtual] || `Dia ${diaAtual}`;
+    document.getElementById('semana-atual-titulo').textContent = `Semana ${semanaAtual} - ${nomeDia}`;
+}
+
+// Retorna número do dia (1 = segunda ... 7 = domingo)
+function calcularDiaAtual() {
+    const hoje = new Date();
+    const diaSemana = hoje.getDay();
+    return diaSemana === 0 ? 7 : diaSemana;
+}
+
+// Carregar refeições do dia
+function carregarRefeicoesDoDia() {
+    const cardapio = getCardapio();
+    // 🚨 Melhoria: Ordenar refeições do cardápio por horário antes de usar
+    let refeicoesDoDia = cardapio[`semana${semanaAtual}`]?.[`dia${diaAtual}`] || [];
     
-    // === Elementos da Página Inicial/Dashboard (Pontuação e Cardápio) ===
-    const pontuacaoUsuarioSpan = document.getElementById('pontuacao-usuario');
-    const pontuacaoTotalSpan = document.getElementById('pontuacao-total');
-    const condicoesListUl = document.querySelector('.conditions-list ul'); 
-    const semanaAtualTitulo = document.getElementById('semana-atual-titulo');
-    const tasksContainerUl = document.querySelector('.tasks-container ul');
-    const mensagemMotivacional = document.getElementById('mensagem-motivacional');
+    // Ordena as refeições por horário para exibição correta
+    refeicoesDoDia.sort((a, b) => {
+        if (a.horario < b.horario) return -1;
+        if (a.horario > b.horario) return 1;
+        return 0;
+    });
 
-    // Tenta carregar os dados cadastrais
-    const dadosUsuarioSalvos = localStorage.getItem('dadosUsuario');
-    const dadosUsuario = dadosUsuarioSalvos ? JSON.parse(dadosUsuarioSalvos) : null;
+    const container = document.querySelector('.tasks-container ul');
+
+    if (!refeicoesDoDia.length) {
+        container.innerHTML = `
+            <li style="text-align:center; padding:30px; color:#999; list-style:none;">
+                <div style="font-size:3em; margin-bottom:10px;">🍽️</div>
+                <div>Nenhuma refeição cadastrada para hoje</div>
+                <div style="font-size:0.9em; margin-top:10px;">Aguarde o nutricionista adicionar seu cardápio</div>
+            </li>`;
+        return;
+    }
+
+    const chave = `status_refeicoes_cliente${clienteAtual}_s${semanaAtual}_d${diaAtual}`;
+    let status = JSON.parse(localStorage.getItem(chave) || '[]');
     
-    // Tenta carregar os resultados da avaliação
-    const resultadoAvaliacaoSalvos = localStorage.getItem('ultimaAvaliacao');
-    const resultadoAvaliacao = resultadoAvaliacaoSalvos ? JSON.parse(resultadoAvaliacaoSalvos) : null;
+    // Garante que o array de status tenha o mesmo tamanho das refeições. 
+    // Isso é importante após o nutricionista editar/adicionar/remover refeições, o que zera o status.
+    if (status.length !== refeicoesDoDia.length) {
+        status = Array(refeicoesDoDia.length).fill(false);
+        localStorage.setItem(chave, JSON.stringify(status));
+    }
+
+
+    // Renderizar lista
+    container.innerHTML = refeicoesDoDia.map((refeicao, index) => {
+        const concluida = status[index];
+        return `
+            <li class="${concluida ? 'tarefa-concluida' : ''}">
+                <input type="checkbox"
+                    class="task-checkbox"
+                    id="refeicao-${index}"
+                    ${concluida ? 'checked' : ''}
+                    onchange="marcarRefeicao(${index})">
+                <label class="task-label" for="refeicao-${index}">
+                    <strong style="color:var(--main-green);">${refeicao.tipo}</strong>
+                    <span style="color:#ff6b6b;font-weight:600;"> às ${refeicao.horario}</span><br>
+                    <span style="color:#666;">${refeicao.alimento}</span><br>
+                    <small style="color:#999;">Quantidade: ${refeicao.quantidade}</small>
+                </label>
+            </li>
+        `;
+    }).join('');
+}
+ 
+
+// Mostrar feedback visual
+function mostrarFeedback(msg) {
+    const antigo = document.querySelector('.feedback-temp');
+    if (antigo) antigo.remove();
+
+    const div = document.createElement('div');
+    div.className = 'feedback-temp';
+    div.textContent = msg;
+    // O estilo agora depende do seu CSS externo (paginainicial.css)
+    div.style.cssText = `
+        position:fixed;top:20px;right:20px;
+        background:#4caf50;color:white;
+        padding:15px 25px;border-radius:8px;
+        font-weight:600;z-index:10000;
+        box-shadow:0 4px 12px rgba(0,0,0,0.2);
+        animation:slideIn 0.3s ease;
+    `;
+    document.body.appendChild(div);
+    setTimeout(() => {
+        div.style.animation = 'slideOut 0.3s ease forwards'; // 'forwards' para garantir que pare no final
+        setTimeout(() => div.remove(), 300);
+    }, 2000);
+}
+
+// Carregar condições intestinais
+function carregarCondicoes() {
+    const container = document.getElementById('lista-condicoes');
+    const condicoesStr = localStorage.getItem(`condicoes_cliente${clienteAtual}`);
+    // ... restante da função sem alterações ...
     
-    // Define os cardápios com pontuação para cada refeição
-    const substituicoes = {
-        'lactose': { 'leite': 'leite de amêndoas', 'iogurte': 'iogurte de coco', 'queijo': 'queijo de castanhas' },
-        'glúten': { 'pão': 'pão sem glúten', 'macarrão': 'macarrão de arroz ou abobrinha', 'trigo': 'farinha de arroz' }
-    };
-    
-    const cardapiosPorFase = {
-        'introducao': {
-            'domingo': [
-                { texto: 'Café da manhã: Iogurte natural com frutas', pontos: 3 },
-                { texto: 'Almoço: Salada de folhas com frango grelhado', pontos: 4 },
-                { texto: 'Jantar: Omelete de legumes com queijo', pontos: 3 }
-            ],
-            'segunda': [
-                { texto: 'Café da manhã: Pão integral com queijo branco', pontos: 3 },
-                { texto: 'Almoço: Arroz integral, feijão e carne magra', pontos: 5 },
-                { texto: 'Jantar: Sopa de abóbora com gengibre', pontos: 2 }
-            ],
-            'terca': [
-                { texto: 'Café da manhã: Mingau de aveia', pontos: 3 },
-                { texto: 'Almoço: Peixe assado com batata doce', pontos: 5 },
-                { texto: 'Jantar: Wrap de frango com vegetais', pontos: 4 }
-            ],
-            'quarta': [
-                { texto: 'Café da manhã: Vitamina de banana e leite de amêndoas', pontos: 3 },
-                { texto: 'Almoço: Salada de lentilha com legumes coloridos', pontos: 4 },
-                { texto: 'Jantar: Frango desfiado com purê de couve-flor', pontos: 3 }
-            ],
-            'quinta': [
-                { texto: 'Café da manhã: Ovos mexidos com tomate e orégano', pontos: 3 },
-                { texto: 'Almoço: Quibe assado com salada de pepino', pontos: 5 },
-                { texto: 'Jantar: Sopa de legumes com croutons integrais', pontos: 2 }
-            ],
-            'sexta': [
-                { texto: 'Café da manhã: Panqueca de banana e aveia', pontos: 4 },
-                { texto: 'Almoço: Salmão grelhado com quinoa e brócolis', pontos: 5 },
-                { texto: 'Jantar: Sopa de feijão com carne desfiada', pontos: 3 }
-            ],
-            'sabado': [
-                { texto: 'Café da manhã: Frutas variadas e castanhas', pontos: 3 },
-                { texto: 'Almoço: Macarrão integral com molho de tomate caseiro', pontos: 4 },
-                { texto: 'Jantar: Salada de atum com grão de bico', pontos: 3 }
-            ]
-        },
-        'adaptacao': {
-            'domingo': [
-                { texto: 'Café da manhã: Omelete com legumes e queijo', pontos: 4 },
-                { texto: 'Almoço: Bife grelhado, arroz integral e salada', pontos: 5 },
-                { texto: 'Jantar: Salada de frango com abacate', pontos: 4 }
-            ],
-            'segunda': [
-                { texto: 'Café da manhã: Panqueca de aveia com morangos', pontos: 4 },
-                { texto: 'Almoço: Salmão assado com purê de abóbora', pontos: 5 },
-                { texto: 'Jantar: Sopa de mandioquinha', pontos: 3 }
-            ],
-            'terca': [
-                { texto: 'Café da manhã: Iogurte grego com granola caseira', pontos: 4 },
-                { texto: 'Almoço: Frango ao curry com arroz basmati', pontos: 5 },
-                { texto: 'Jantar: Wraps de alface recheados com carne moída', pontos: 4 }
-            ],
-            'quarta': [
-                { texto: 'Café da manhã: Ovos mexidos com abacate', pontos: 4 },
-                { texto: 'Almoço: Espaguete de abobrinha com molho bolonhesa', pontos: 5 },
-                { texto: 'Jantar: Sopa de lentilha com gengibre', pontos: 3 }
-            ],
-            'quinta': [
-                { texto: 'Café da manhã: Pão sem glúten com ovos e tomate', pontos: 4 },
-                { texto: 'Almoço: Salada de quinoa com legumes e queijo', pontos: 4 },
-                { texto: 'Jantar: Bife de patinho com brócolis cozido', pontos: 4 }
-            ],
-            'sexta': [
-                { texto: 'Café da manhã: Vitamina de frutas vermelhas e proteína', pontos: 4 },
-                { texto: 'Almoço: Frango xadrez fit com arroz integral', pontos: 5 },
-                { texto: 'Jantar: Sopa cremosa de legumes com frango', pontos: 3 }
-            ],
-            'sabado': [
-                { texto: 'Café da manhã: Tapioca com recheio de frango e requeijão', pontos: 4 },
-                { texto: 'Almoço: Filé de peixe em crosta de castanhas com salada', pontos: 5 },
-                { texto: 'Jantar: Salada de atum com ovos e azeitonas', pontos: 4 }
-            ]
-        },
-        'desafios': {}, 
-        'consolidacao': {}
-    };
-
-    function adaptarCardapio(cardapioOriginal, alergiasDoUsuario) {
-        if (!alergiasDoUsuario || alergiasDoUsuario.length === 0) return cardapioOriginal;
-        
-        return cardapioOriginal.map(refeicao => {
-            let textoAdaptado = refeicao.texto;
-            alergiasDoUsuario.forEach(alergia => {
-                const mapaSub = substituicoes[alergia.toLowerCase()];
-                if (mapaSub) {
-                    for (const alimento in mapaSub) {
-                        const regex = new RegExp(`\\b${alimento}\\b`, 'gi');
-                        textoAdaptado = textoAdaptado.replace(regex, mapaSub[alimento]);
-                    }
-                }
-            });
-            return { texto: textoAdaptado, pontos: refeicao.pontos };
-        });
-    }
-
-    function calcularPontuacaoTotal(cardapio) {
-        return cardapio.reduce((total, refeicao) => total + refeicao.pontos, 0);
-    }
-
-    function carregarTarefasConcluidas() {
-        const tarefasSalvas = localStorage.getItem('tarefasConcluidas');
-        return tarefasSalvas ? JSON.parse(tarefasSalvas) : {};
-    }
-
-    function salvarTarefasConcluidas(tarefas) {
-        localStorage.setItem('tarefasConcluidas', JSON.stringify(tarefas));
-    }
-
-    function calcularPontuacaoAcumulada(tarefasConcluidas) {
-        let total = 0;
-        for (const key in tarefasConcluidas) {
-            if (tarefasConcluidas[key].concluida) {
-                total += tarefasConcluidas[key].pontos;
-            }
-        }
-        return total;
-    }
-
-    function atualizarMensagemMotivacional(pontuacaoAtual, pontuacaoMeta) {
-        if (!mensagemMotivacional) return;
-        
-        const porcentagem = (pontuacaoAtual / pontuacaoMeta) * 100;
-        
-        if (pontuacaoAtual === 0) {
-            mensagemMotivacional.textContent = '🌱 Comece sua jornada! Marque suas primeiras tarefas.';
-            mensagemMotivacional.className = 'mensagem-motivacional inicio';
-        } else if (porcentagem < 50) {
-            mensagemMotivacional.textContent = '💪 Bom começo! Continue completando as demandas.';
-            mensagemMotivacional.className = 'mensagem-motivacional progresso';
-        } else if (porcentagem >= 50 && porcentagem < 100) {
-            mensagemMotivacional.textContent = '🔥 Você já cumpriu metade dos desafios, continue assim!';
-            mensagemMotivacional.className = 'mensagem-motivacional metade';
-        } else if (porcentagem >= 100) {
-            mensagemMotivacional.textContent = '🎉 Parabéns! Você cumpriu todos os desafios!';
-            mensagemMotivacional.className = 'mensagem-motivacional completo';
-        }
-    }
-
-    function criarCheckboxTarefa(tarefa, index, diaAtual) {
-        const li = document.createElement('li');
-        
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = `tarefa-${diaAtual}-${index}`;
-        checkbox.classList.add('task-checkbox');
-        
-        const tarefasConcluidas = carregarTarefasConcluidas();
-        const chave = `${diaAtual}-${index}`;
-        
-        if (tarefasConcluidas[chave] && tarefasConcluidas[chave].concluida) {
-            checkbox.checked = true;
-            li.classList.add('tarefa-concluida');
-        }
-        
-        checkbox.addEventListener('change', function() {
-            const tarefas = carregarTarefasConcluidas();
-            
-            if (this.checked) {
-                tarefas[chave] = {
-                    concluida: true,
-                    pontos: tarefa.pontos,
-                    texto: tarefa.texto
-                };
-                li.classList.add('tarefa-concluida');
-            } else {
-                delete tarefas[chave];
-                li.classList.remove('tarefa-concluida');
-            }
-            
-            salvarTarefasConcluidas(tarefas);
-            
-            const pontuacaoAtual = calcularPontuacaoAcumulada(tarefas);
-            if (pontuacaoTotalSpan) {
-                pontuacaoTotalSpan.textContent = pontuacaoAtual;
-            }
-            
-            const pontuacaoMeta = parseInt(pontuacaoUsuarioSpan.textContent) || 0;
-            atualizarMensagemMotivacional(pontuacaoAtual, pontuacaoMeta);
-        });
-        
-        const label = document.createElement('label');
-        label.htmlFor = checkbox.id;
-        label.classList.add('task-label');
-        
-        const span = document.createElement('span');
-        span.textContent = tarefa.texto;
-        
-        const pontosBadge = document.createElement('span');
-        pontosBadge.classList.add('task-pontos');
-        pontosBadge.textContent = `+${tarefa.pontos}`;
-        
-        label.appendChild(span);
-        
-        li.appendChild(checkbox);
-        li.appendChild(label);
-        li.appendChild(pontosBadge);
-        
-        return li;
+    if (!condicoesStr) {
+        container.innerHTML = '<li style="color:#999;">Nenhuma condição cadastrada</li>';
+        return;
     }
 
     try {
-        // --- 1. CARREGAR DADOS CADASTRAIS (Para a página de Perfil) ---
-        if (dadosUsuario) {
-            if (userNameSpan) userNameSpan.textContent = dadosUsuario.nome || 'Não informado';
-            if (userEmailSpan) userEmailSpan.textContent = dadosUsuario.contato || 'Não informado';
-            if (userSexSpan) userSexSpan.textContent = dadosUsuario.sexo || 'Não informado';
-            if (userAgeSpan) userAgeSpan.textContent = dadosUsuario.idade || 'Não informado';
-            if (userIMC) userIMC.textContent = dadosUsuario.imc ? dadosUsuario.imc.toFixed(2) : 'Não informado';
-        }
-        
-        // --- 2. CARREGAR PONTUAÇÃO E CONDIÇÕES ---
-        if (resultadoAvaliacao) {
-            if (condicoesListUl && resultadoAvaliacao.grupo) {
-                condicoesListUl.innerHTML = '';
-                const grupoLi = document.createElement('li');
-                grupoLi.textContent = resultadoAvaliacao.grupo;
-                condicoesListUl.appendChild(grupoLi);
-
-                if (resultadoAvaliacao.alergias && resultadoAvaliacao.alergias.length > 0) {
-                    resultadoAvaliacao.alergias.forEach(alergia => {
-                        const li = document.createElement('li');
-                        li.textContent = `Alergia a ${alergia}`;
-                        condicoesListUl.appendChild(li);
-                    });
-                }
-            }
-            
-            // --- 3. CÁLCULO DA SEMANA E CARDÁPIO ---
-            if (semanaAtualTitulo && dadosUsuario && dadosUsuario.dataInicio) {
-                const dataInicio = new Date(dadosUsuario.dataInicio);
-                const dataAtual = new Date();
-                
-                const diferencaEmMilissegundos = dataAtual.getTime() - dataInicio.getTime();
-                const diasPassados = Math.floor(diferencaEmMilissegundos / (1000 * 60 * 60 * 24));
-                
-                let semanaAtual = Math.floor(diasPassados / 7) + 1;
-                semanaAtual = Math.min(semanaAtual, 12);
-
-                let faseDoPrograma = '';
-                if (semanaAtual >= 1 && semanaAtual <= 3) {
-                    semanaAtualTitulo.textContent = `Semana ${semanaAtual} - INTRODUÇÃO`;
-                    faseDoPrograma = 'introducao';
-                } else if (semanaAtual >= 4 && semanaAtual <= 6) {
-                    semanaAtualTitulo.textContent = `Semana ${semanaAtual} - ADAPTAÇÃO`;
-                    faseDoPrograma = 'adaptacao';
-                } else if (semanaAtual >= 7 && semanaAtual <= 9) {
-                    semanaAtualTitulo.textContent = `Semana ${semanaAtual} - DESAFIOS`;
-                    faseDoPrograma = 'desafios';
-                } else if (semanaAtual >= 10 && semanaAtual <= 12) {
-                    semanaAtualTitulo.textContent = `Semana ${semanaAtual} - CONSOLIDAÇÃO`;
-                    faseDoPrograma = 'consolidacao';
-                } else {
-                    semanaAtualTitulo.textContent = `Parabéns! Você concluiu o programa de 12 semanas.`;
-                    faseDoPrograma = 'consolidacao';
-                }
-                
-                if (tasksContainerUl) {
-                    const diasDaSemana = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-                    const hoje = diasDaSemana[dataAtual.getDay()];
-                    
-                    const cardapioBase = cardapiosPorFase[faseDoPrograma] ? cardapiosPorFase[faseDoPrograma][hoje] : null;
-
-                    if (cardapioBase) {
-                        const alergias = resultadoAvaliacao.alergias || [];
-                        const cardapioPersonalizado = adaptarCardapio(cardapioBase, alergias);
-
-                        // Calcular pontuação total (META)
-                        const pontuacaoMeta = calcularPontuacaoTotal(cardapioPersonalizado);
-                        if (pontuacaoUsuarioSpan) {
-                            pontuacaoUsuarioSpan.textContent = pontuacaoMeta;
-                        }
-
-                        // Calcular pontuação acumulada
-                        const tarefasConcluidas = carregarTarefasConcluidas();
-                        const pontuacaoAcumulada = calcularPontuacaoAcumulada(tarefasConcluidas);
-                        if (pontuacaoTotalSpan) {
-                            pontuacaoTotalSpan.textContent = pontuacaoAcumulada;
-                        }
-
-                        // Atualizar mensagem motivacional
-                        atualizarMensagemMotivacional(pontuacaoAcumulada, pontuacaoMeta);
-
-                        // Criar lista de tarefas com checkboxes
-                        tasksContainerUl.innerHTML = '';
-                        cardapioPersonalizado.forEach((refeicao, index) => {
-                            const li = criarCheckboxTarefa(refeicao, index, hoje);
-                            tasksContainerUl.appendChild(li);
-                        });
-                    } else {
-                        tasksContainerUl.innerHTML = '<li>Cardápio não disponível para esta fase.</li>';
-                    }
-                }
-            } else if (semanaAtualTitulo) {
-                semanaAtualTitulo.textContent = `Programa não iniciado`;
-            }
-        } else {
-            // Caso não haja NENHUM dado de avaliação
-            if (semanaAtualTitulo) semanaAtualTitulo.textContent = `Bem-vindo ao Programa de Adaptação!`;
-            if (pontuacaoUsuarioSpan) pontuacaoUsuarioSpan.textContent = `0`;
-            if (pontuacaoTotalSpan) pontuacaoTotalSpan.textContent = `0`;
-            if (condicoesListUl) condicoesListUl.innerHTML = `<li>Sem dados de avaliação.</li>`;
-            if (tasksContainerUl) tasksContainerUl.innerHTML = `<li>Para começar, faça a sua avaliação.</li>`;
+        const condicoes = JSON.parse(condicoesStr);
+        if (!Array.isArray(condicoes) || !condicoes.length) {
+            container.innerHTML = '<li style="color:#999;">Nenhuma condição cadastrada</li>';
+            return;
         }
 
+        container.innerHTML = condicoes.map(c => `<li>• ${c}</li>`).join('');
     } catch (e) {
-        console.error('Erro geral ao processar dados:', e);
-        if (userNameSpan) userNameSpan.textContent = 'Erro ao carregar dados';
-        if (pontuacaoUsuarioSpan) pontuacaoUsuarioSpan.textContent = `Erro`;
-        if (semanaAtualTitulo) semanaAtualTitulo.textContent = `Erro ao carregar semana`;
-        if (condicoesListUl) condicoesListUl.innerHTML = `<li>Erro ao carregar dados.</li>`;
+        console.error("Erro ao carregar condições:", e);
+        container.innerHTML = '<li style="color:#999;">Erro ao carregar condições</li>';
     }
-});
-
-function voltarPagina() {
-    window.history.back();
 }
+
+// Atualizar pontuação
+function carregarPontuacao() {
+    const cardapio = getCardapio();
+    const refeicoes = cardapio[`semana${semanaAtual}`]?.[`dia${diaAtual}`] || [];
+    const chave = `status_refeicoes_cliente${clienteAtual}_s${semanaAtual}_d${diaAtual}`;
+    const status = JSON.parse(localStorage.getItem(chave) || '[]');
+
+    // Considera apenas as marcações que correspondem ao número atual de refeições
+    const completas = status.slice(0, refeicoes.length).filter(s => s).length; 
+    const total = refeicoes.length;
+
+    document.getElementById('pontuacao-total').textContent = completas;
+
+    const box = document.querySelector('.score-box');
+    if (total > 0 && completas === total) {
+        box.style.background = 'linear-gradient(135deg,#4caf50,#8bc34a)';
+        box.style.color = 'white';
+    } else {
+        box.style.background = '';
+        box.style.color = '';
+    }
+    // O total exibido no scorebox é corrigido no HTML para refletir o total de refeições
+    const scoreTextElement = box.querySelector('p:last-child');
+    if (scoreTextElement) {
+        scoreTextElement.innerHTML = `<span id="pontuacao-total">${completas}</span>/${total}`;
+    }
+}
+
+// Buscar cardápio salvo
+function getCardapio() {
+    const chave = `cardapio_cliente${clienteAtual}`;
+    try {
+        const dados = localStorage.getItem(chave);
+        return dados ? JSON.parse(dados) : {};
+    } catch {
+        console.error("Erro ao ler cardápio do localStorage");
+        return {};
+    }
+}
+
+// ⚠️ NOTA: Você precisa adicionar as seguintes regras ao seu arquivo CSS (paginainicial.css)
+/*
+.tarefa-concluida { opacity: 0.6; text-decoration: line-through; }
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+.feedback-temp {
+    animation-fill-mode: forwards;
+}
+*/
