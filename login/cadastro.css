@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Arial", sans-serif;
+    font-family: "Arial", sans-serif; /* Mantenha 'Arial' ou a fonte que você estiver usando */
 }
 
 body {
@@ -208,7 +208,37 @@ body {
     }
 }
 
-/* Tabs com efeito de transição suave */
+/* === NOVO: Seleção de Tipo de Usuário === */
+.user-type-selection {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.type-tab {
+    flex: 1;
+    padding: 8px 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    background: transparent;
+    color: #535a3a;
+    transition: all 0.3s ease;
+}
+
+.type-tab.active {
+    background: #ffffff; /* Fundo branco para aba ativa */
+    color: #333333;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabs de Cadastro/Login com efeito de transição suave */
 .tab-buttons {
     display: flex;
     justify-content: center;
@@ -336,7 +366,7 @@ input:focus::placeholder {
     box-shadow: 0 2px 8px rgba(143, 162, 72, 0.3);
 }
 
-/* Animação de transição entre formulários */
+/* Animação de transição entre formulários (Tabs Cadastro/Login) */
 .form {
     display: none;
     animation: formFadeIn 0.4s ease-out;
@@ -356,6 +386,43 @@ input:focus::placeholder {
         transform: translateX(0);
     }
 }
+
+/* === NOVO: Controle de Fases e Tipos de Cadastro === */
+
+/* Para alternar entre Nutricionista e Paciente */
+.type-form {
+    display: none;
+}
+
+.type-form.active {
+    display: block;
+    animation: formFadeIn 0.4s ease-out; 
+}
+
+/* Para alternar entre as fases 1 e 2 do Nutricionista */
+.cadastro-fase {
+    display: none;
+    animation: formFadeIn 0.4s ease-out;
+}
+
+.cadastro-fase.active {
+    display: block;
+}
+
+/* Estilo para o link "Voltar" */
+.voltar-fase {
+    margin-top: 15px;
+    color: #535a3a;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.voltar-fase:hover {
+    color: #8fa248;
+    text-decoration: underline;
+}
+
 
 /* Responsivo */
 @media (max-width: 768px) {

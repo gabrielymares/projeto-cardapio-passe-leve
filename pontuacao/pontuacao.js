@@ -3,7 +3,7 @@ function mostrarErro(mensagem) {
     const container = document.getElementById('resultado-box');
     container.className = 'resultado-box erro';
 
-    document.getElementById("resultado-pontos").textContent = "⚠️ Erro ao carregar dados";
+    document.getElementById("resultado-pontos").textContent = " Erro ao carregar dados";
     document.getElementById("resultado-texto").textContent = mensagem;
     document.getElementById("detalhes-extras").innerHTML = `
         <p><strong>O que fazer:</strong></p>
@@ -113,33 +113,34 @@ function exibirResultado(dados, isWarning = false) {
 
     // --- 1. Preencher dados principais (Pontuação e Grupo) ---
     document.getElementById("resultado-pontos").textContent = 
-        isWarning ? "⚠️ Dados Inconsistentes" : `${dados.pontuacao} pontos - ${dados.grupo}`;
+        isWarning ? " Dados Inconsistentes" : ` ${dados.grupo}`;
 
     document.getElementById("resultado-texto").innerHTML = 
         isWarning 
         ? `Seus dados foram salvos, mas houve inconsistências. Revise o questionário. Pontuação calculada: <strong>${dados.pontuacao}</strong>.`
-        : `🎯 Com base nas suas respostas, você obteve <strong>${dados.pontuacao} pontos</strong> e foi classificado no <strong>${dados.grupo}</strong>!`;
+        : ` Com base nas suas respostas, você foi classificado no <strong>${dados.grupo}</strong>!`;
 
     // --- 2. Montar Detalhes Extras ---
     let detalhesHTML = '';
 
-    // Detalhes de Alergias (p2_alergia)
-    const alergias = Array.isArray(dados.p2_alergia) ? dados.p2_alergia : [];
-    if (alergias.length > 0) {
-        const nomesAlergias = alergias.map(a => {
-            if (a === 'lactose') return 'Leite / Lactose';
-            if (a === 'gluten') return 'Glúten';
-            return a; // Mantém "outros" ou outros valores
-        });
+ // Detalhes de Alergias (p2_alergia)
+const alergias = Array.isArray(dados.p2_alergia) ? dados.p2_alergia : [];
+if (alergias.length > 0) {
+    const nomesAlergias = alergias.map(a => {
+        if (a === 'lactose') return 'Leite / Lactose';
+        if (a === 'gluten') return 'Glúten';
+        return a; // Mantém "outros" ou outros valores
+    });
 
-        detalhesHTML += `
-            <div style="margin-bottom: 15px;">
-                <strong>🚫 Alergias e Intolerâncias:</strong>
-                <ul>${nomesAlergias.map(a => `<li>${a}</li>`).join('')}</ul>
+    // 1. Junta os nomes das alergias em uma string, separados por ", "
+    const alergiasJuntas = nomesAlergias.join(', '); // Ex: "Glúten, Leite / Lactose, amendoim"
+
+    detalhesHTML += `
+        <div style="margin-bottom: 15px;">
+            <strong>Alergias e Intolerâncias:</strong> ${alergiasJuntas}
             </div>
-        `;
-    }
-
+    `;
+}
     // Campo de texto de Alergias Outras (p2_outros)
     const alergiaOutros = dados.p2_alergia_outros || '';
     if (alergiaOutros.trim()) {
@@ -151,26 +152,28 @@ function exibirResultado(dados, isWarning = false) {
     const doencaDiagnosticada = dados.p1_doenca_outros || '';
 
     if (dados.p3_restricao === 'sim' && restricaoMedica.trim()) {
-         detalhesHTML += `<p><strong>⚠️ Restrição por Orientação Médica:</strong> ${restricaoMedica}</p>`;
+         detalhesHTML += `<p><strong> Restrição por Orientação Médica:</strong> ${restricaoMedica}</p>`;
     }
     
     if (dados.p1_doenca === 'sim' && doencaDiagnosticada.trim()) {
-         detalhesHTML += `<p><strong>🩺 Doença(s) Diagnosticada(s):</strong> ${doencaDiagnosticada}</p>`;
+         detalhesHTML += `<p><strong> Doença(s) Diagnosticada(s):</strong> ${doencaDiagnosticada}</p>`;
     }
     
-    // Objetivo (p6_objetivo)
-    const objetivos = Array.isArray(dados.p6_objetivo) ? dados.p6_objetivo : [];
-    if (objetivos.length > 0) {
-        // Formata os valores para exibição (ex: 'ganhar_massa' -> 'Ganhar Massa Muscular')
-        const nomesObjetivos = objetivos.map(o => o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
-        detalhesHTML += `
-            <div style="margin-top: 15px;">
-                <strong>💡 Seus Objetivos:</strong>
-                <ul>${nomesObjetivos.map(o => `<li>${o}</li>`).join('')}</ul>
+ // Objetivo (p6_objetivo)
+const objetivos = Array.isArray(dados.p6_objetivo) ? dados.p6_objetivo : [];
+if (objetivos.length > 0) {
+    // Formata os valores para exibição (ex: 'ganhar_massa' -> 'Ganhar Massa Muscular')
+    const nomesObjetivos = objetivos.map(o => o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+    
+    // 1. Junta os nomes dos objetivos em uma string, separados por ", "
+    const objetivosJuntos = nomesObjetivos.join(', '); // Ex: "Ganhar Massa Muscular, Perder Peso"
+    
+    detalhesHTML += `
+        <div style="margin-top: 15px;">
+            <strong>Seus Objetivos:</strong> ${objetivosJuntos}
             </div>
-        `;
-    }
-    
+    `;
+}
     // Respostas de texto (Q8 e Q9)
     const alimentosEvita = dados.p8_alimentos_evita || 'Não especificado';
     const alimentosFrequentes = dados.p9_frequencia || 'Não especificado';

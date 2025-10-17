@@ -333,10 +333,14 @@ header p {
     opacity: 0.8;
 }
 
+/* ===== FORMULÁRIO (Wrapper para centralizar botão) ===== */
+#formulario-avaliacao {
+    display: flex;
+    flex-direction: column;
+}
+
 /* ===== BOTÕES (btn-confirmar do seu exemplo) ===== */
 button[type="submit"] {
-    width: 100%;
-    max-width: 350px;
     padding: 16px 24px;
     border: none;
     border-radius: 12px;
@@ -348,7 +352,6 @@ button[type="submit"] {
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 28px;
-    align-self: center;
     box-shadow: 0 6px 20px rgba(143, 162, 72, 0.3);
     position: relative;
     overflow: hidden;

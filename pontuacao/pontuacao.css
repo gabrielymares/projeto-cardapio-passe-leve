@@ -15,7 +15,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: Arial, sans-serif; /* FONTE BASE DEFINIDA AQUI */
 }
 
 body {
@@ -39,7 +39,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    /* Removemos o 'transform: translateX(20%)' para centralizar corretamente */
 }
 
 /* Título e Texto */
@@ -50,9 +49,11 @@ body {
     color: var(--light-text-color);
 }
 
-.resultado-box p {
-    font-size: 18px;
+.resultado-box p,
+.detalhes-extras strong { /* Garante que o texto 'Seus Objetivos:' tenha o tamanho padrão */
+    font-size: 18px; 
     margin: 0;
+    color: var(--main-text-color);
 }
 
 /* Botão Prosseguir */
@@ -68,7 +69,7 @@ body {
     cursor: pointer;
     align-self: center;
     transition: background-color 0.3s ease;
-    width: 100%; /* Estilo responsivo para botões */
+    width: 100%;
     max-width: 300px;
 }
 
@@ -77,7 +78,7 @@ body {
     background-color: var(--dark-green-hover);
 }
 
-/* Listas de Detalhes */
+/* Listas de Detalhes (Mantido caso outras listas existam, mas corrigido para consistência) */
 ul {
     list-style-type: none;
     padding-left: 0;
@@ -86,8 +87,8 @@ ul {
 
 li {
     margin-bottom: 5px;
-    font-size: 0.95em;
-    color: var(--light-text-color);
+    font-size: 18px; /* TAMANHO PADRÃO */
+    color: var(--main-text-color);
 }
 
 /* Estilos de Status e Animação */
@@ -111,13 +112,15 @@ li {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Estilos dos Detalhes Extras (Alergias/Restrições) */
+/* Estilos dos Detalhes Extras (Alergias/Restrições) - CORRIGIDO PARA CONSISTÊNCIA */
 .detalhes-extras {
     text-align: left;
     padding: 15px;
     border-radius: 8px;
     margin: 15px 0;
     background-color: rgba(255, 255, 255, 0.7);
+    font-size: 18px; /* TAMANHO PADRÃO APLICADO AQUI */
+    color: var(--main-text-color); /* COR PADRÃO APLICADA AQUI */
 }
 
 /* Botão de Voltar (Seta) */
@@ -131,7 +134,7 @@ li {
     display: inline-flex;
     align-items: center;
     transition: background-color 0.3s ease;
-    position: absolute; /* Para fixar no canto */
+    position: absolute;
     top: 20px;
     right: 20px; 
 }
@@ -149,14 +152,14 @@ li {
     border-right: 6px solid white; 
 }
 
-/* Regras Responsivas para Telas Menores */
+/* Regras Responsivas para Telas Menores (CORRIGIDO PARA CONSISTÊNCIA) */
 @media (max-width: 768px) {
     body {
         padding: 10px;
     }
     
     .resultado-box {
-        margin: 0; /* Ocupa a largura total no centro da tela */
+        margin: 0;
         padding: 25px 15px;
         box-shadow: none;
         border-radius: 10px;
@@ -169,8 +172,11 @@ li {
     }
     
     .resultado-box p,
-    #resultado-texto {
-        font-size: 16px;
+    #resultado-texto,
+    .detalhes-extras, /* APLICANDO TAMANHO CONSISTENTE */
+    .detalhes-extras strong,
+    li { /* APLICANDO TAMANHO CONSISTENTE */
+        font-size: 16px; /* TAMANHO PADRÃO MOBILE */
         line-height: 1.5;
     }
     
@@ -184,7 +190,6 @@ li {
     }
     
     .detalhes-extras {
-        font-size: 14px;
         padding: 15px 10px;
     }
     

@@ -32,10 +32,7 @@ function carregarPerfil() {
     // --- CARREGAR RESULTADOS DA AVALIAÇÃO (Pontuação, Grupo) ---
     if (resultadoAvaliacao) {
         try {
-            // Pontuação
-            document.getElementById('pontuacao-usuario').textContent = resultadoAvaliacao.pontuacao || '0';
-            document.getElementById('pontuacao-total').textContent = '22'; // Mantendo o total fixo
-            
+          
             // Condições e Alergias
             const condicoesListUl = document.querySelector('.conditions-list ul');
             if (condicoesListUl) {
