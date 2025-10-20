@@ -27,22 +27,27 @@
            
         <main class="main-content">
             <div class="content-header">
-                <h2 id="semana-atual-titulo">Semana 1 - Segunda-feira</h2>
+                <h2 id="titulo-principal">Carregando...</h2>
             </div>
 
             <div class="content-body">
+                
                 <div class="tasks-container">
+                    <div id="semanas-section">
+                        <h3 style="margin-bottom:12px;">Semanas do seu programa</h3>
+                        <div class="semanas-container" id="semanas-container">
+                            <!-- Cards de semanas serão gerados aqui via JS -->
+                        </div>
+                    </div>
                     <ul></ul>
                 </div>
 
                 <div class="side-info">
-                    </div>
+                    
                     
                     <div class="conditions-list">
-                        <h4 style="margin-bottom: 10px; color: #333;">• Condições Intestinais</h4>
-                        <ul id="lista-condicoes">
-                            <li style="text-align: center; color: #999;">Carregando...</li>
-                        </ul>
+                        <h4 style="margin-bottom: 10px; color: #333;" id="info-grupo-paciente">Carregando informações do seu grupo</h4>
+                        
                     </div>
                 </div>
             </div>
@@ -50,5 +55,6 @@
     </div>
 
     <script src="paginainicial.js"></script>
+    <script src="../login/verificarSessao.js"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@
 body {
     font-family: 'Poppins', Arial, sans-serif;
     background-color: #d4e5c9;
-    padding: 30px;
+    padding: 20px;
     min-height: 100vh;
 }
 
@@ -41,142 +41,173 @@ body {
 }
 
 h1 {
-    font-size: 2.5em;
-    color: #000;
-    font-weight: 700;
-}
-
-.dias-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 900px;
-}
-
-.dia-card {
-    background-color: white;
-    border-radius: 20px;
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.dia-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.dia-titulo {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: #000;
-}
-
-.toggle-icon {
     font-size: 2em;
-    font-weight: 300;
-    color: #333;
-    transition: transform 0.3s;
+    color: #000;
+    font-weight: 700;
 }
 
-.toggle-icon.rotated {
-    transform: rotate(45deg);
+/* Container Horizontal Trello */
+.semanas-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
 }
 
-.refeicoes-list {
+.semanas-container::-webkit-scrollbar {
+    height: 10px;
+}
+
+.semanas-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.semanas-container::-webkit-scrollbar-thumb {
+    background: #8fa248;
+    border-radius: 10px;
+}
+
+/* Coluna do Dia */
+.dia-column {
+    min-width: 320px;
+    max-width: 320px;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    flex-shrink: 0;
 }
 
-/* Corrigido: Ajuste de layout */
-.refeicao-item {
+/* Header do Dia */
+.dia-header {
+    background-color: #8fa248;
     padding: 15px;
-    background-color: #f9f9f9;
     border-radius: 10px;
-    position: relative;
-    display: flex; /* Adicionado para alinhar o conteúdo e o botão de edição */
-    justify-content: space-between; /* Adicionado para empurrar o botão para a direita */
-    align-items: flex-start; /* Alinha no topo */
+    color: white;
+    text-align: center;
 }
 
-/* Novo: Contêiner para o texto da refeição */
-.refeicao-conteudo {
-    flex-grow: 1;
+.dia-titulo {
+    font-size: 1.2em;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Container de Refeições */
+.refeicoes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Card de Refeição */
+.refeicao-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    border-left: 4px solid #8fa248;
+    position: relative;
+}
+
+.refeicao-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateX(3px);
 }
 
 .refeicao-tipo {
     font-weight: 600;
-    font-size: 1.1em;
-    color: #000;
-    margin-bottom: 5px;
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 8px;
 }
 
 .refeicao-horario {
     color: #e74c3c;
     font-weight: 500;
-    font-size: 0.95em;
+    font-size: 0.9em;
     margin-bottom: 8px;
 }
 
-.refeicao-detalhe {
-    color: #555;
-    margin-bottom: 3px;
-    font-size: 0.9em;
+.refeicao-info {
+    color: #666;
+    font-size: 0.85em;
+    line-height: 1.4;
 }
 
 .btn-editar-refeicao {
-    /* Ajustado para não usar position: absolute, mantendo-o no fluxo flex */
+    
+    top: 10px;
+    right: 10px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0; /* Remove padding desnecessário */
-    flex-shrink: 0; /* Impede que ele encolha */
-    margin-left: 15px; /* Adiciona espaço entre o conteúdo e o botão */
+    padding: 5px;
 }
 
 .btn-editar-refeicao svg {
-    width: 20px;
-    height: 20px;
-    stroke: #333;
-    display: block; /* Para garantir alinhamento */
+    width: 18px;
+    height: 18px;
+    stroke: #666;
 }
 
 .btn-editar-refeicao:hover svg {
     stroke: #8fa248;
 }
 
+.refeicao-actions {
+    position: absolute;
+    display: flex;
+    gap: 0.4rem;
+    top: 10px;
+    right: 10px;
+    width: 4rem;
+    
+}
+
+.btn-excluir-refeicao {
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+}
+
+.btn-excluir-refeicao svg {
+    width: 18px;
+    height: 18px;
+    stroke: #666;
+}
+
+.btn-excluir-refeicao:hover svg {
+    stroke: #e74c3c;
+}
+
+/* Botão Adicionar */
 .btn-adicionar {
-    margin-top: 15px;
-    padding: 12px 25px;
+    padding: 12px;
     background-color: #8fa248;
     color: white;
     border: none;
     border-radius: 10px;
     font-weight: 600;
-    font-size: 1em;
     cursor: pointer;
     transition: all 0.3s;
-    /* Centraliza ou garante largura total se necessário */
-    display: block;
-    width: 100%;
+    text-align: center;
 }
 
 .btn-adicionar:hover {
     background-color: #7a9038;
 }
 
-.conteudo-dia {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-}
-
-.conteudo-dia.expanded {
-    max-height: 2000px; /* Valor alto para garantir expansão total */
+.mensagem-vazio {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
 }
 
 /* Modal */
@@ -187,14 +218,19 @@ h1 {
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    
 }
 
 .modal.active {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 30%;
+    padding-top: 3%;
 }
 
 .modal-content {
@@ -204,6 +240,11 @@ h1 {
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
+    position: relative;
+}
+
+.modal.active .modal-content {
+    display: block;
 }
 
 .modal-header {
@@ -225,7 +266,6 @@ h1 {
     font-size: 2em;
     color: #666;
     cursor: pointer;
-    line-height: 1;
 }
 
 .close-btn:hover {
@@ -276,7 +316,6 @@ h1 {
     border: none;
     border-radius: 10px;
     font-weight: 600;
-    font-size: 1em;
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -299,58 +338,41 @@ h1 {
     background-color: #7a9038;
 }
 
-.mensagem-vazio {
-    text-align: center;
-    color: #999;
-    padding: 20px;
-    font-style: italic;
-}
-
-/* Estilo para refeições concluídas pelo cliente */
-.refeicao-item.refeicao-concluida {
-    background-color: #e8f5e9;
-    border-left: 4px solid #4caf50;
-    opacity: 0.9;
-}
-
-.refeicao-item.refeicao-concluida .refeicao-tipo {
-    color: #2e7d32;
-}
-
-/* Animação suave para os indicadores */
-.dia-header span {
-    transition: all 0.3s ease;
-}
-
-/* Estilo para o indicador de check nas refeições (Removido, não é usado no JS) */
-/* Tooltip para os indicadores (Mantido) */
-.dia-header span[title]:hover {
-    cursor: help;
-    transform: scale(1.1);
-}
-
-/* Badge de status no cabeçalho do dia (Mantido) */
-.dia-header > div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
     body {
         padding: 15px;
     }
-
+    
     h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
     }
-
-    .dia-titulo {
-        font-size: 1.2em;
+    
+    .header {
+        margin-bottom: 20px;
     }
-
+    
+    /* Layout vertical em pilha */
+    .semanas-container {
+        flex-direction: column;
+        overflow-x: visible;
+    }
+    
+    .dia-column {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    
     .modal-content {
         width: 95%;
+        max-width: 95%;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-header {
+        padding: 20px;
     }
 }

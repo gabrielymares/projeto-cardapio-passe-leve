@@ -1,175 +1,112 @@
-// Variáveis Globais de Estado (Corrigido: Adicionadas)
-// Estes valores devem ser obtidos da navegação ou contexto real.
-// Para fins de teste, inicializamos:
-let clienteAtual = 1;      // ID do Cliente
-let semanaAtual = 1;       // Número da Semana
+// ==========================================
+// Variáveis Globais
+// ==========================================
+let semanaAtual = null;
 let diaAtual = null;
 let refeicaoEditando = null;
 
-// Funções de armazenamento (Mantidas)
-function getCardapio() {
-    const chave = `cardapio_cliente${clienteAtual}`;
-    const cardapio = localStorage.getItem(chave);
-    return cardapio ? JSON.parse(cardapio) : {};
-}
+const diasSemana = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
 
-function saveCardapio(cardapio) {
-    const chave = `cardapio_cliente${clienteAtual}`;
-    localStorage.setItem(chave, JSON.stringify(cardapio));
-}
+// ==========================================
+// Acesso aos Dados (localStorage)
+// ==========================================
+function getUsuarios() { return JSON.parse(localStorage.getItem('usuarios')) || []; }
+function getPlanosAlimentares() { return JSON.parse(localStorage.getItem('planosAlimentares')) || []; }
+function savePlanosAlimentares(planos) { localStorage.setItem('planosAlimentares', JSON.stringify(planos)); }
+function getRefeicoes() { return JSON.parse(localStorage.getItem('refeicoes')) || []; }
+function saveRefeicoes(refeicoes) { localStorage.setItem('refeicoes', JSON.stringify(refeicoes)); }
+let usuarioId = null;       // será preenchido a partir da URL ou seleção
+let planoAtualId = null;    // id do plano alimentar atual
 
-// -------------------------------------------------------------
-// FUNÇÕES DE RENDERIZAÇÃO NOVAS / COMPLETAS
-// -------------------------------------------------------------
+// ==========================================
+// Funções Principais
+// ==========================================
 
-// Adicionada: Função para gerar o HTML do indicador de progresso
-function renderizarIndicadorProgresso(progresso, totalRefeicoes) {
-    if (totalRefeicoes === 0) {
-        return `<span style="color: #999;" title="Nenhuma refeição cadastrada">Sem Plano</span>`;
-    }
-    const cor = progresso === 100 ? '#4caf50' : '#e74c3c';
-    return `<span style="color: ${cor}; font-weight: 600;" title="${progresso}% de refeições concluídas">${progresso}%</span>`;
-}
+function obterParametrosURL() {
+    const params = new URLSearchParams(window.location.search);
+    // Ler possíveis parâmetros que representam o usuário
+    const paramUsuario = params.get('usuarioId') || params.get('cliente') || params.get('id');
+    const parsedParam = paramUsuario !== null ? parseFloat(paramUsuario) : null;
+    semanaAtual = parseInt(params.get('semana'));
+    if (isNaN(semanaAtual)) semanaAtual = 1;
 
-// Adicionada: Função para gerar o HTML da lista de refeições de um dia
-function renderizarRefeicoes(refeicoes, numeroDia) {
-    if (refeicoes.length === 0) {
-        return `<div class="mensagem-vazio">Nenhuma refeição cadastrada. Clique em 'Adicionar Refeição' para começar.</div>`;
-    }
-
-    return refeicoes.map((refeicao, index) => `
-        <div class="refeicao-item">
-            <div class="refeicao-conteudo">
-                <div class="refeicao-tipo">${refeicao.tipo}</div>
-                <div class="refeicao-horario">⏰ ${refeicao.horario}</div>
-                <div class="refeicao-detalhe">Alimento: ${refeicao.alimento}</div>
-                <div class="refeicao-detalhe">Quantidade: ${refeicao.quantidade}</div>
-            </div>
-            <button class="btn-editar-refeicao" onclick="editarRefeicao(${numeroDia}, ${index})" title="Editar Refeição">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                </svg>
-            </button>
-        </div>
-    `).join('');
-}
-
-// Adicionada: Função placeholder para obter progresso (necessária para salvarRefeicao)
-function obterProgressoDia(numeroDia) {
-    // Implementação real exigiria dados de check-in de refeições, que não temos.
-    // Retornamos 0% se for um dia ímpar, 100% se for um dia par (apenas para simular o indicador)
-    return numeroDia % 2 === 0 ? 100 : 0; 
-}
-
-
-// Criar card de um dia (Corrigido: Função Completada)
-function criarCardDia(numeroDia) {
-    const cardapio = getCardapio();
-    let refeicoesDoDia = cardapio[`semana${semanaAtual}`]?.[`dia${numeroDia}`] || [];
-
-    // Ordena as refeições
-    refeicoesDoDia.sort((a, b) => {
-        if (a.horario < b.horario) return -1;
-        if (a.horario > b.horario) return 1;
-        return 0;
-    });
-    
-    // Obter progresso (para o cabeçalho)
-    const progressoDia = obterProgressoDia(numeroDia);
-    const nomeDia = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][numeroDia % 7]; // Ajuste a lógica do dia da semana se necessário
-    
-    // Criar o elemento do card
-    const diaCard = document.createElement('div');
-    diaCard.className = 'dia-card';
-    diaCard.innerHTML = `
-        <div class="dia-header" onclick="toggleDia(${numeroDia})">
-            <div>
-                <h2 class="dia-titulo">${nomeDia.toUpperCase()} - DIA ${numeroDia}</h2>
-                ${renderizarIndicadorProgresso(progressoDia, refeicoesDoDia.length)}
-            </div>
-            <span class="toggle-icon" id="toggle-${numeroDia}">+</span>
-        </div>
-        <div class="conteudo-dia" id="conteudo-${numeroDia}">
-            <div class="refeicoes-list" id="refeicoes-${numeroDia}">
-                ${renderizarRefeicoes(refeicoesDoDia, numeroDia)}
-            </div>
-            <button class="btn-adicionar" onclick="abrirModal(${numeroDia})">Adicionar Refeição</button>
-        </div>
-    `;
-    
-    return diaCard;
-}
-
-
-// Renderizar todos os dias da semana (Mantida)
-function renderizarDias() {
-    // Atualiza o título H1 com a semana atual
-    document.getElementById('tituloSemana').textContent = `Semana ${semanaAtual}`;
-    
-    const container = document.getElementById('diasContainer');
-    container.innerHTML = '';
-    
-    for (let dia = 1; dia <= 7; dia++) {
-        const diaCard = criarCardDia(dia);
-        container.appendChild(diaCard);
-    }
-}
-
-// Toggle (abrir/fechar) dia (Mantida)
-function toggleDia(numeroDia) {
-    const conteudo = document.getElementById(`conteudo-${numeroDia}`);
-    const toggle = document.getElementById(`toggle-${numeroDia}`);
-    
-    conteudo.classList.toggle('expanded');
-    toggle.classList.toggle('rotated');
-}
-
-// Abrir modal para adicionar refeição (Mantida)
-function abrirModal(dia, refeicaoIndex = null) {
-    diaAtual = dia;
-    refeicaoEditando = refeicaoIndex;
-    
-    const modal = document.getElementById('modalRefeicao');
-    modal.classList.add('active');
-    
-    if (refeicaoIndex !== null) {
-        // Modo edição
-        document.getElementById('modalTitulo').textContent = 'Editar Refeição';
-        const cardapio = getCardapio();
-        
-        const refeicoes = cardapio[`semana${semanaAtual}`]?.[`dia${dia}`];
-        if (!refeicoes || !refeicoes[refeicaoIndex]) {
-             console.error("Refeição não encontrada para edição.");
-             fecharModal();
-             return;
+    let usuarios = getUsuarios();
+    console.debug('[semana.js] paramUsuario=', paramUsuario, 'parsedParam=', parsedParam);
+    console.debug('[semana.js] usuarios (count)=', usuarios ? usuarios.length : 0);
+    // Se não existir lista de usuários, tentar obter usuário da sessão (localStorage 'usuario')
+    if (!usuarios || usuarios.length === 0) {
+        const sessaoUsuario = localStorage.getItem('usuario');
+        if (sessaoUsuario) {
+            try {
+                const parsedSessao = JSON.parse(sessaoUsuario);
+                usuarios = [parsedSessao];
+            } catch (e) { /* ignorar */ }
         }
-        
-        const refeicao = refeicoes[refeicaoIndex];
-        
-        document.getElementById('tipoRefeicao').value = refeicao.tipo;
-        document.getElementById('horario').value = refeicao.horario;
-        document.getElementById('alimento').value = refeicao.alimento;
-        document.getElementById('gramas').value = refeicao.quantidade;
-    } else {
-        // Modo adicionar
-        document.getElementById('modalTitulo').textContent = 'Adicionar Refeição';
-        document.getElementById('tipoRefeicao').value = 'Café da manhã';
-        document.getElementById('horario').value = '';
-        document.getElementById('alimento').value = '';
-        document.getElementById('gramas').value = '';
     }
+    // Tentar encontrar o cliente pelo id (valor real armazenado em usuario.id)
+    let cliente = null;
+    if (parsedParam !== null && !isNaN(parsedParam)) {
+        cliente = usuarios.find(u => u.id == parsedParam);
+    }
+    // Se não encontrado, tentar interpretar o parâmetro como índice na lista de usuários
+    if (!cliente && parsedParam !== null && Number.isInteger(parsedParam)) {
+        const idx = Number(parsedParam);
+        // Tentar 0-based
+        if (idx >= 0 && idx < usuarios.length) cliente = usuarios[idx];
+        // Tentar 1-based
+        if (!cliente && idx >= 1 && idx <= usuarios.length) cliente = usuarios[idx - 1];
+    }
+
+    // Se ainda não encontrou, não abortar silenciosamente — deixar a validação subir para o carregamento
+    console.debug('[semana.js] cliente encontrado=', cliente);
+    if (!cliente) {
+        console.error("Cliente não encontrado com o ID/índice fornecido.");
+        return;
+    }
+    
+    let planos = getPlanosAlimentares();
+    // Procura o plano usando o ID real do usuário.
+    usuarioId = cliente.id;
+    let plano = planos.find(p => p.cliente_id == usuarioId);
+    
+    if (!plano) {
+        // Se não existir, cria um novo plano
+        plano = {
+            id: Date.now(),
+            // <-- CORREÇÃO PRINCIPAL 3: Salva o ID real do usuário como a chave estrangeira (FK).
+            cliente_id: usuarioId, 
+            nome_plano: `Cardápio - ${cliente.nome}`,
+            data_criacao: new Date().toISOString()
+        };
+        planos.push(plano);
+        savePlanosAlimentares(planos);
+    }
+    
+    planoAtualId = plano.id;
+    console.debug('[semana.js] usuarioId=', usuarioId, 'planoAtualId=', planoAtualId, 'plano=', plano);
 }
 
-// Fechar modal (Mantida)
-function fecharModal() {
-    const modal = document.getElementById('modalRefeicao');
-    modal.classList.remove('active');
-    diaAtual = null;
-    refeicaoEditando = null;
+function getRefeicoesDia(semana, dia) {
+    const todasRefeicoes = getRefeicoes();
+    return todasRefeicoes.filter(r => 
+        r.plano_id === planoAtualId && 
+        r.semana == semana && 
+        r.dia == dia
+    ).sort((a, b) => a.horario.localeCompare(b.horario));
 }
 
-// Salvar refeição (Mantida, com ajuste no indicador)
-function salvarRefeicao() {
+function salvarRefeicao(event) {
+    // Se chamado por um evento de submit, prevenir comportamento padrão
+    if (event && event.preventDefault) {
+        event.preventDefault();
+    }
+
+    const form = document.getElementById('formRefeicao');
+    if (!form) {
+        console.error('[semana.js] salvarRefeicao: formulário não encontrado');
+        return;
+    }
+
     const tipo = document.getElementById('tipoRefeicao').value;
     const horario = document.getElementById('horario').value;
     const alimento = document.getElementById('alimento').value;
@@ -180,84 +117,238 @@ function salvarRefeicao() {
         return;
     }
     
-    const novaRefeicao = {
-        tipo,
-        horario,
-        alimento,
-        quantidade
-    };
-    
-    const cardapio = getCardapio();
-    
-    // Garantir que a estrutura existe
-    if (!cardapio[`semana${semanaAtual}`]) {
-        cardapio[`semana${semanaAtual}`] = {};
-    }
-    if (!cardapio[`semana${semanaAtual}`][`dia${diaAtual}`]) {
-        cardapio[`semana${semanaAtual}`][`dia${diaAtual}`] = [];
-    }
+    const todasRefeicoes = getRefeicoes();
     
     if (refeicaoEditando !== null) {
-        // Editar refeição existente
-        cardapio[`semana${semanaAtual}`][`dia${diaAtual}`][refeicaoEditando] = novaRefeicao;
+        const index = todasRefeicoes.findIndex(r => r.id === refeicaoEditando);
+        if (index !== -1) {
+            todasRefeicoes[index] = { ...todasRefeicoes[index], tipo, horario, alimento, quantidade };
+        }
     } else {
-        // Adicionar nova refeição
-        cardapio[`semana${semanaAtual}`][`dia${diaAtual}`].push(novaRefeicao);
+        todasRefeicoes.push({
+            id: Date.now() + Math.random(),
+            plano_id: planoAtualId,
+            semana: semanaAtual,
+            dia: diaAtual,
+            tipo, horario, alimento, quantidade
+        });
     }
     
-    // Ordenar o array de refeições por horário antes de salvar
-    cardapio[`semana${semanaAtual}`][`dia${diaAtual}`].sort((a, b) => {
-        if (a.horario < b.horario) return -1;
-        if (a.horario > b.horario) return 1;
-        return 0;
-    });
-
-    saveCardapio(cardapio);
-    
-    // Atualizar apenas o dia modificado
-    const refeicoesContainer = document.getElementById(`refeicoes-${diaAtual}`);
-    const refeicoes = cardapio[`semana${semanaAtual}`][`dia${diaAtual}`];
-    refeicoesContainer.innerHTML = renderizarRefeicoes(refeicoes, diaAtual);
-    
-    // Atualizar o indicador de progresso no header do dia (busca o progresso atualizado)
-    const progressoDia = obterProgressoDia(diaAtual);
-    const diaHeader = document.querySelector(`#conteudo-${diaAtual}`).previousElementSibling;
-    const indicadorDiv = diaHeader.querySelector('div');
-    
-    // O nome do dia precisa ser resgatado
-    const nomeDia = diaHeader.querySelector('.dia-titulo').textContent.split(' - ')[0]; 
-
-    indicadorDiv.innerHTML = `
-        <h2 class="dia-titulo">${nomeDia} - DIA ${diaAtual}</h2>
-        ${renderizarIndicadorProgresso(progressoDia, refeicoes.length)}
-    `;
-    
+    saveRefeicoes(todasRefeicoes);
+    renderizarSemanas();
     fecharModal();
 }
 
-// Editar refeição (Mantida)
-function editarRefeicao(dia, index) {
-    abrirModal(dia, index);
+function excluirRefeicao(refeicaoId) {
+    if (!confirm('Deseja realmente excluir esta refeição?')) return;
+    
+    const refeicoesAtualizadas = getRefeicoes().filter(r => r.id !== refeicaoId);
+    saveRefeicoes(refeicoesAtualizadas);
+    renderizarSemanas();
 }
 
-// Voltar para detalhes do cliente (Mantida)
+// ==========================================
+// Renderização e UI (sem alterações lógicas)
+// ==========================================
+
+function renderizarDia(diaIndex) {
+    const refeicoesDia = getRefeicoesDia(semanaAtual, diaIndex);
+    const nomeDia = diasSemana[diaIndex - 1];
+    
+    const refeicoesHTML = refeicoesDia.length === 0 
+        ? '<div class="mensagem-vazio">Nenhuma refeição cadastrada</div>'
+        : refeicoesDia.map(renderizarRefeicao).join('');
+    
+    return `
+        <div class="dia-column">
+            <div class="dia-header"><h2 class="dia-titulo">${nomeDia}</h2></div>
+            <div class="refeicoes-container">${refeicoesHTML}</div>
+            <button class="btn-adicionar" onclick="abrirModal(${diaIndex})">+ Adicionar Refeição</button>
+        </div>
+    `;
+}
+
+function renderizarRefeicao(refeicao) {
+    // Para simplificar, o conteúdo do SVG foi substituído. Cole o seu SVG aqui.
+    return `
+        <div class="refeicao-card" data-id="${refeicao.id}">
+            <div class="refeicao-actions">
+                <button class="btn-editar-refeicao" onclick="editarRefeicao(${refeicao.id})" title="Editar">&#9998;</button>
+                <button class="btn-excluir-refeicao" onclick="excluirRefeicao(${refeicao.id})" title="Excluir">&#128465;</button>
+            </div>
+            <div class="refeicao-tipo">${refeicao.tipo}</div>
+            <div class="refeicao-horario">⏰ ${refeicao.horario}</div>
+            <div class="refeicao-info">
+                <strong>Alimento:</strong> ${refeicao.alimento}<br>
+                <strong>Quantidade:</strong> ${refeicao.quantidade}
+            </div>
+        </div>
+    `;
+}
+
+function renderizarSemanas() {
+    document.getElementById('tituloSemana').textContent = `Semana ${semanaAtual}`;
+    const container = document.getElementById('semanasContainer');
+    let html = '';
+    for (let dia = 1; dia <= 7; dia++) {
+        html += renderizarDia(dia);
+    }
+    container.innerHTML = html;
+}
+
+// ==========================================
+// Lógica do Modal (sem alterações lógicas)
+// ==========================================
+
+function abrirModal(dia, refeicaoId = null) {
+    console.debug('[semana.js] abrirModal: dia=', dia, 'refeicaoId=', refeicaoId);
+    diaAtual = dia;
+    refeicaoEditando = refeicaoId;
+    
+    const modal = document.getElementById('modalRefeicao');
+    if (!modal) {
+        console.error('[semana.js] abrirModal: modal #modalRefeicao não encontrado no DOM');
+        return;
+    }
+
+    // Limpar form e campos
+    const form = modal.querySelector('form');
+    if (form) {
+        console.debug('[semana.js] abrirModal: resetando formulário');
+        form.reset();
+    } else {
+        console.error('[semana.js] abrirModal: form dentro do modal não encontrado');
+        return;
+    }
+
+    // Verificar todos os campos necessários
+    const campos = {
+        modalTitulo: document.getElementById('modalTitulo'),
+        tipoRefeicao: document.getElementById('tipoRefeicao'),
+        horario: document.getElementById('horario'),
+        alimento: document.getElementById('alimento'),
+        gramas: document.getElementById('gramas')
+    };
+
+    // Verificar se todos os campos existem
+    for (const [nome, elemento] of Object.entries(campos)) {
+        if (!elemento) {
+            console.error(`[semana.js] abrirModal: campo #${nome} não encontrado`);
+            return;
+        }
+    }
+
+    if (refeicaoId !== null) {
+        campos.modalTitulo.textContent = 'Editar Refeição';
+        const refeicao = getRefeicoes().find(r => r.id === refeicaoId);
+        if (refeicao) {
+            console.debug('[semana.js] abrirModal: preenchendo campos com refeição', refeicao);
+            campos.tipoRefeicao.value = refeicao.tipo || '';
+            campos.horario.value = refeicao.horario || '';
+            campos.alimento.value = refeicao.alimento || '';
+            campos.gramas.value = refeicao.quantidade || '';
+        } else {
+            console.warn('[semana.js] abrirModal: refeição não encontrada com id', refeicaoId);
+        }
+    } else {
+        campos.modalTitulo.textContent = 'Adicionar Refeição';
+    }
+
+    // Garantir que o modal está visível
+    modal.style.display = 'block';
+    modal.classList.add('active');
+}
+
+function fecharModal() {
+    const modal = document.getElementById('modalRefeicao');
+    if (!modal) {
+        console.error('[semana.js] fecharModal: modal não encontrado');
+        return;
+    }
+
+    // Limpar dados do formulário
+    const form = modal.querySelector('form');
+    if (form) form.reset();
+
+    // Limpar variáveis globais
+    refeicaoEditando = null;
+    diaAtual = null;
+
+    // Esconder modal
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+    
+    console.debug('[semana.js] fecharModal: modal fechado e dados limpos');
+}
+
+function editarRefeicao(refeicaoId) {
+    console.debug('[semana.js] editarRefeicao: id=', refeicaoId);
+    const refeicao = getRefeicoes().find(r => r.id === refeicaoId);
+    if (refeicao) {
+        abrirModal(refeicao.dia, refeicaoId);
+    } else {
+        console.error('[semana.js] editarRefeicao: refeição não encontrada com id', refeicaoId);
+    }
+}
+
+// ==========================================
+// Event Listeners e Inicialização
+// ==========================================
+
 function voltarParaDetalhes() {
     window.history.back();
 }
 
-// Fechar modal ao clicar fora (Mantida)
-document.getElementById('modalRefeicao').addEventListener('click', (e) => {
-    if (e.target.id === 'modalRefeicao') {
-        fecharModal();
-    }
-});
-
-
-// CORREÇÃO CRÍTICA: Inicializar a renderização da página
 document.addEventListener('DOMContentLoaded', () => {
-    // Define o título inicial
-    document.getElementById('tituloSemana').textContent = `Semana ${semanaAtual}`;
+    obterParametrosURL();
     
-    // Renderiza os dias
-    renderizarDias(); 
+    if (!usuarioId || !semanaAtual) {
+        alert('Erro: Cliente ou semana não especificados na URL!');
+        window.history.back();
+        return;
+    }
+    
+    renderizarSemanas();
+    
+    // Inicialização do modal
+    const modal = document.getElementById('modalRefeicao');
+    if (modal) {
+        // Fechar no clique fora
+        modal.addEventListener('click', (e) => {
+            if (e.target.id === 'modalRefeicao') {
+                fecharModal();
+            }
+        });
+
+        // Fechar no ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                fecharModal();
+            }
+        });
+
+        // Garantir que o modal começa fechado
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+    } else {
+        console.error('[semana.js] modalRefeicao não encontrado no DOM; eventos de modal serão ignorados');
+    }
+
+    // Inicialização do formulário
+    const formRefeicao = document.getElementById('formRefeicao');
+    if (formRefeicao) {
+        formRefeicao.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.debug('[semana.js] formRefeicao submit');
+            salvarRefeicao();
+        });
+
+        // Adicionar botão de cancelar se existir
+        const btnCancelar = formRefeicao.querySelector('button[type="button"]');
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', fecharModal);
+        }
+    } else {
+        console.error('[semana.js] formRefeicao não encontrado no DOM; envio de refeições não estará disponível');
+    }
 });

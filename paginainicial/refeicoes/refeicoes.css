@@ -1,0 +1,49 @@
+/* (Pode usar o mesmo CSS base do plano_semanal.css) */
+body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+.header { display: flex; align-items: center; margin-bottom: 30px; }
+.back-button { font-size: 2em; color: #333; text-decoration: none; margin-right: 15px; }
+h1 { font-size: 1.5em; color: #333; }
+
+.container-dias {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+.card-dia {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.card-dia h2 {
+    font-size: 1.1em;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+.refeicao {
+    margin-bottom: 15px;
+}
+.refeicao-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.refeicao-tipo {
+    color: #333;
+}
+.refeicao-horario {
+    color: #ff6b6b; /* Vermelho para o horário */
+}
+.refeicao-detalhes {
+    font-size: 0.9em;
+    color: #666;
+}
+.mensagem-vazio {
+    text-align: center;
+    color: #888;
+    margin-top: 50px;
+    font-size: 1.1em;
+    grid-column: 1 / -1; /* Ocupa a largura inteira */
+}

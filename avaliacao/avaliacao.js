@@ -1,136 +1,7 @@
-// ============================================
-// FUNÇÕES AUXILIARES PARA SALVAR NO ARRAY DE CLIENTES
-// ============================================
-
-function montarRestricoes(avaliacao) {
-    const restricoes = [];
-    
-    if (avaliacao.p1_doenca === 'sim' && avaliacao.p1_doenca_outros) {
-        restricoes.push(`Doença: ${avaliacao.p1_doenca_outros}`);
-    }
-    
-    if (avaliacao.p2_alergia && avaliacao.p2_alergia.length > 0) {
-        let alergias = avaliacao.p2_alergia.filter(a => a !== 'nenhuma');
-        
-        const indexOutros = alergias.indexOf('outros');
-        if (indexOutros > -1) {
-            alergias.splice(indexOutros, 1);
-        }
-        
-        if (alergias.length > 0) {
-            restricoes.push(`Alergias: ${alergias.join(', ')}`);
-        }
-    }
-    
-    if (avaliacao.p2_alergia_outros) {
-        restricoes.push(`Outras alergias: ${avaliacao.p2_alergia_outros}`);
-    }
-    
-    if (avaliacao.p3_restricao === 'sim' && avaliacao.p3_restricao_outros) {
-        restricoes.push(`Restrição médica: ${avaliacao.p3_restricao_outros}`);
-    }
-    
-    if (avaliacao.p8_alimentos_evita) {
-        restricoes.push(`Evita: ${avaliacao.p8_alimentos_evita}`);
-    }
-    
-    return restricoes.length > 0 ? restricoes.join('\n') : 'Nenhuma restrição informada';
-}
-
-function montarSaude(avaliacao) {
-    const saude = [];
-    
-    if (avaliacao.p4_exercicio) {
-        const exercicioMap = {
-            'diariamente': 'Exercita-se diariamente',
-            'algumas_vezes': 'Exercita-se 1-3 vezes/semana',
-            'raramente': 'Raramente exercita-se'
-        };
-        saude.push(exercicioMap[avaliacao.p4_exercicio] || avaliacao.p4_exercicio);
-    }
-    
-    if (avaliacao.p5_apetite) {
-        saude.push(`Apetite: ${avaliacao.p5_apetite}`);
-    }
-    
-    if (avaliacao.p6_objetivo && avaliacao.p6_objetivo.length > 0) {
-        const objetivos = avaliacao.p6_objetivo.map(obj => {
-            const map = {
-                'emagrecer': 'Emagrecer',
-                'ganhar_peso': 'Ganhar peso',
-                'ganhar_massa': 'Ganhar massa muscular',
-                'manter_peso': 'Manter peso',
-                'melhorar_saude': 'Melhorar saúde/energia'
-            };
-            return map[obj] || obj;
-        });
-        saude.push(`Objetivos: ${objetivos.join(', ')}`);
-    }
-    
-    if (avaliacao.p7_refeicoes) {
-        const refeicoesMap = {
-            '2_ou_menos': '2 ou menos refeições/dia',
-            '3_ou_4': '3 a 4 refeições/dia',
-            '5_ou_mais': '5 ou mais refeições/dia'
-        };
-        saude.push(refeicoesMap[avaliacao.p7_refeicoes] || avaliacao.p7_refeicoes);
-    }
-    
-    if (avaliacao.p9_frequencia) {
-        saude.push(`Consome frequentemente: ${avaliacao.p9_frequencia}`);
-    }
-    
-    if (avaliacao.p10_emocional) {
-        const emocionalMap = {
-            'sempre': 'Sempre tem fome emocional',
-            'as_vezes': 'Às vezes tem fome emocional',
-            'nunca': 'Não tem fome emocional'
-        };
-        saude.push(emocionalMap[avaliacao.p10_emocional] || avaliacao.p10_emocional);
-    }
-    
-    if (avaliacao.grupo) {
-        saude.push(`\n${avaliacao.grupo}`);
-    }
-    
-    if (avaliacao.pontuacao !== undefined) {
-        saude.push(`Pontuação: ${avaliacao.pontuacao}/50`);
-    }
-    
-    return saude.length > 0 ? saude.join('\n') : 'Informações não disponíveis';
-}
-
-function salvarClienteNoArray(dadosUsuario, avaliacaoCompleta) {
-    const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-    
-    const novoCliente = {
-        nome: dadosUsuario.nome || 'Sem nome',
-        genero: dadosUsuario.sexo || 'Não informado',
-        altura: dadosUsuario.altura || '0',
-        idade: dadosUsuario.idade || '0',
-        peso: dadosUsuario.peso || '0',
-        telefone: dadosUsuario.contato || 'Não informado',
-        imc: dadosUsuario.imc || '0',
-        restricoes: montarRestricoes(avaliacaoCompleta),
-        saude: montarSaude(avaliacaoCompleta),
-        dataCadastro: dadosUsuario.dataInicio || new Date().toISOString(),
-        grupo: avaliacaoCompleta.grupo || 'Não definido',
-        pontuacao: avaliacaoCompleta.pontuacao || 0
-    };
-    
-    clientes.push(novoCliente);
-    
-    localStorage.setItem('clientes', JSON.stringify(clientes));
-    
-    console.log(`✅ Cliente "${novoCliente.nome}" adicionado! Total de clientes: ${clientes.length}`);
-    
-    return clientes.length - 1;
-}
-
-// ============================================
-// FUNÇÕES DE INTERAÇÃO DO FORMULÁRIO
-// ============================================
-
+/**
+ * @param {Event} evt - O evento de clique.
+ * @param {string} nomeAba - O ID do conteúdo da aba a ser exibida.
+ */
 function abrirAba(evt, nomeAba) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
@@ -138,135 +9,102 @@ function abrirAba(evt, nomeAba) {
     evt.currentTarget.classList.add('active');
 }
 
+/**
+ * Mostra ou esconde as opções de resposta de uma pergunta.
+ * @param {HTMLElement} element - O elemento do título da pergunta que foi clicado.
+ */
 function toggleResposta(element) {
     const respostas = element.nextElementSibling;
     respostas.classList.toggle('active');
     element.classList.toggle('active');
 }
 
-// CORREÇÃO PRINCIPAL: Inicializa eventos dos checkboxes de alergia (P2)
+/**
+ * Configura os eventos para os checkboxes de alergia (P2) para terem um comportamento lógico.
+ */
 function inicializarCheckboxesAlergia() {
     const checkboxes = document.querySelectorAll('input[name="p2_alergia"]');
     
     checkboxes.forEach(cb => {
         cb.addEventListener('change', function() {
-            if (this.value === 'nenhuma') {
-                marcarNenhuma(this);
-            } else if (this.value !== 'nenhuma') {
-                // Se marca qualquer coisa que não é "nenhuma", desmarca nenhuma
-                const parent = this.closest('.respostas');
-                const cbNenhuma = parent.querySelector('input[name="p2_alergia"][value="nenhuma"]');
-                if (this.checked && cbNenhuma && cbNenhuma.checked) {
-                    cbNenhuma.checked = false;
+            const parent = this.closest('.respostas');
+            const cbNenhuma = parent.querySelector('input[name="p2_alergia"][value="nenhuma"]');
+            
+            if (this.value === 'nenhuma' && this.checked) {
+                // Se "nenhuma" for marcada, desmarca todas as outras
+                parent.querySelectorAll('input[name="p2_alergia"]').forEach(i => {
+                    if (i.value !== 'nenhuma') i.checked = false;
+                });
+                const campoOutros = parent.querySelector('input[name="p2_outros"]');
+                if (campoOutros) {
+                    campoOutros.style.display = 'none';
+                    campoOutros.value = '';
                 }
-                
-                // Se marca 'outros', mostra o campo
-                if (this.value === 'outros' && this.checked) {
-                    mostrarCampoOutros(this);
-                } else if (this.value === 'outros' && !this.checked) {
-                    // Se desmarcar 'outros', esconde o campo
-                    const parent = this.closest('.respostas');
-                    const campoOutros = parent.querySelector('input[name="p2_outros"]');
-                    if (campoOutros) {
-                        campoOutros.style.display = 'none';
-                        campoOutros.value = '';
-                    }
+            } else if (this.checked && cbNenhuma && cbNenhuma.checked) {
+                // Se outra opção for marcada, desmarca "nenhuma"
+                cbNenhuma.checked = false;
+            }
+
+            // Mostra ou esconde o campo de texto "outros"
+            if (this.value === 'outros') {
+                const campoOutros = parent.querySelector('input[name="p2_outros"]');
+                if (campoOutros) {
+                    campoOutros.style.display = this.checked ? 'inline-block' : 'none';
+                    if (!this.checked) campoOutros.value = '';
                 }
             }
         });
     });
 }
 
-function marcarNenhuma(cb) {
-    const parent = cb.closest('.respostas');
-    
-    if (cb.value === 'nenhuma' && cb.checked) {
-        // Quando marca "nenhuma", desmarca tudo e esconde o campo
-        const campoOutros = parent.querySelector('input[name="p2_outros"]');
-        
-        if (campoOutros) {
-            campoOutros.style.display = 'none';
-            campoOutros.value = '';
-        }
-        
-        // Desmarca TODOS os outros checkboxes
-        parent.querySelectorAll('input[name="p2_alergia"]').forEach(i => {
-            if (i.value !== 'nenhuma') {
-                i.checked = false;
-            }
-        });
-    }
-}
-
-// FUNÇÃO CORRIGIDA: Mostra campo de texto para P1, P2 e P3
+/**
+ * Mostra um campo de texto quando a opção "sim" ou "outros" é selecionada.
+ * @param {HTMLElement} element - O input (radio ou checkbox) que acionou a função.
+ */
 function mostrarCampoOutros(element) {
-    const name = element.name;
     const parent = element.closest('.respostas');
-    
+    const name = element.name;
     let campoOutrosName = '';
-    
-    if (name === 'p1_doenca') {
-        campoOutrosName = 'p1_outros';
-    } else if (name === 'p2_alergia') {
-        campoOutrosName = 'p2_outros';
-    } else if (name === 'p3_restricao') {
-        campoOutrosName = 'p3_outros';
-    }
-    
-    const campoOutros = parent.querySelector(`input[name="${campoOutrosName}"]`);
-    
-    if (!campoOutros) return;
 
-    let shouldShow = false;
+    if (name === 'p1_doenca') campoOutrosName = 'p1_outros';
+    else if (name === 'p3_restricao') campoOutrosName = 'p3_outros';
     
-    if (element.type === 'radio') {
-        // Para P1 e P3 (Radio buttons): Mostrar se "sim" for selecionado
-        shouldShow = (element.value === 'sim');
-        
-        if (!shouldShow) {
-            campoOutros.style.display = 'none';
-            campoOutros.value = '';
-            return; 
+    if (campoOutrosName) {
+        const campoOutros = parent.querySelector(`input[name="${campoOutrosName}"]`);
+        if (campoOutros) {
+            const shouldShow = element.value === 'sim';
+            campoOutros.style.display = shouldShow ? 'inline-block' : 'none';
+            if (!shouldShow) campoOutros.value = '';
         }
-
-    } else if (element.type === 'checkbox' && element.value === 'outros') {
-        // Para P2 (Checkbox 'outros')
-        shouldShow = element.checked;
-    }
-    
-    // Aplica a visibilidade
-    if (shouldShow) {
-        campoOutros.style.display = 'inline-block';
-        campoOutros.focus();
-    } else {
-        campoOutros.style.display = 'none';
-        campoOutros.value = '';
     }
 }
 
+/**
+ * Valida se todas as perguntas obrigatórias do formulário foram respondidas.
+ * @returns {boolean} - Retorna true se o formulário for válido, false caso contrário.
+ */
 function validarFormulario() {
     const perguntasObrigatorias = [
         'p1_doenca', 'p3_restricao', 'p4_exercicio', 'p5_apetite', 'p7_refeicoes', 'p10_emocional'
     ];
-    let todosRadiosPreenchidos = true;
-
-    // 1. Validar Rádios Obrigatórios
+    
     for (const name of perguntasObrigatorias) {
         if (!document.querySelector(`input[name="${name}"]:checked`)) {
             alert('Por favor, responda todas as perguntas de escolha única.');
-            todosRadiosPreenchidos = false;
-            break;
+            return false;
         }
     }
-    if (!todosRadiosPreenchidos) return false;
 
-    // 2. Validar Checkbox (Objetivo - Q10)
     if (document.querySelectorAll('input[name="p6_objetivo"]:checked').length === 0) {
-        alert('Por favor, selecione pelo menos um objetivo (Pergunta 10).');
+        alert('Por favor, selecione pelo menos um objetivo (Pergunta 6).');
+        return false;
+    }
+    
+    if (document.querySelectorAll('input[name="p2_alergia"]:checked').length === 0) {
+        alert('Por favor, marque pelo menos uma opção para a pergunta de alergia/intolerância (Pergunta 2).');
         return false;
     }
 
-    // 3. Validar Campos 'Outros' (Q1, Q2, Q3)
     const camposOutros = [
         { trigger: 'input[name="p1_doenca"][value="sim"]:checked', field: 'input[name="p1_outros"]' },
         { trigger: 'input[name="p2_alergia"][value="outros"]:checked', field: 'input[name="p2_outros"]' },
@@ -276,54 +114,53 @@ function validarFormulario() {
     for (const item of camposOutros) {
         if (document.querySelector(item.trigger)) {
             const campo = document.querySelector(item.field);
-            if (!campo.value.trim()) {
+            if (!campo || !campo.value.trim()) {
                 alert('Preencha o campo de especificação para sua resposta "Sim" ou "Outros".');
-                campo.focus();
+                campo?.focus();
                 return false;
             }
         }
     }
 
-    // 4. Validar Checkbox Alergia (Q2)
-    if (document.querySelectorAll('input[name="p2_alergia"]:checked').length === 0) {
-        alert('Por favor, marque pelo menos uma opção para a pergunta de alergia/intolerância (Pergunta 2).');
-        return false;
-    }
-
     return true;
 }
 
+/**
+ * Mostra um estado de "carregando" no botão de submit e o desativa.
+ * @returns {function} - Uma função para reverter o botão ao seu estado original.
+ */
 function mostrarLoading() {
     const botao = document.querySelector('#formulario-avaliacao button[type="submit"]');
-    const texto = botao.innerHTML;
+    const textoOriginal = botao.innerHTML;
     botao.innerHTML = 'Processando... ⏳';
     botao.disabled = true;
     botao.style.opacity = '0.7';
-    return () => { botao.innerHTML = texto; botao.disabled = false; botao.style.opacity = '1'; };
+    return () => {
+        botao.innerHTML = textoOriginal;
+        botao.disabled = false;
+        botao.style.opacity = '1';
+    };
 }
 
 // ============================================
-// CÓDIGO PRINCIPAL DO FORMULÁRIO
+// CÓDIGO PRINCIPAL DA PÁGINA
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // INICIALIZAÇÃO: Configura os checkboxes de alergia
+    // Nota: O script 'verificarSessao.js' deve ter sido executado antes deste,
+    // garantindo que o usuário está logado e precisa preencher esta avaliação.
+    
     inicializarCheckboxesAlergia();
-
     const formulario = document.getElementById('formulario-avaliacao');
 
     formulario.addEventListener('submit', (e) => {
         e.preventDefault();
-
         if (!validarFormulario()) return;
 
-        const reverter = mostrarLoading();
+        const reverterLoading = mostrarLoading();
 
-        // 1. DADOS E PONTUAÇÃO
+        // --- 1. CÁLCULO DE PONTUAÇÃO E GRUPO ---
         let pontuacaoTotal = 0;
-        let temAlergiaIntestinal = false;
-        let temRestricaoMetabolica = false;
-
         const respostasPontuadas = {
             p1_doenca: { 'nao': 10, 'sim': 0 },
             p4_exercicio: { 'diariamente': 10, 'algumas_vezes': 5, 'raramente': 0 },
@@ -339,25 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 2. CLASSIFICAÇÃO EM GRUPOS
-        
+        // --- 2. CLASSIFICAÇÃO EM GRUPOS ---
         const alergias = Array.from(document.querySelectorAll('input[name="p2_alergia"]:checked')).map(cb => cb.value);
-        if (alergias.includes('lactose') || alergias.includes('gluten') || alergias.includes('outros')) {
-            temAlergiaIntestinal = true;
-        }
+        const temAlergiaIntestinal = alergias.includes('lactose') || alergias.includes('gluten') || alergias.includes('outros');
 
-        const restricaoTexto = document.querySelector('input[name="p3_restricao"][value="sim"]:checked')
-            ? (document.querySelector('input[name="p3_outros"]')?.value.toLowerCase() || '')
-            : '';
-        const doencaTexto = document.querySelector('input[name="p1_doenca"][value="sim"]:checked')
-            ? (document.querySelector('input[name="p1_outros"]')?.value.toLowerCase() || '')
-            : '';
-
+        const doencaTexto = document.querySelector('input[name="p1_doenca"][value="sim"]:checked') ? (document.querySelector('input[name="p1_outros"]')?.value.toLowerCase() || '') : '';
+        const restricaoTexto = document.querySelector('input[name="p3_restricao"][value="sim"]:checked') ? (document.querySelector('input[name="p3_outros"]')?.value.toLowerCase() || '') : '';
         const indicativosMetabolicos = ['diabetes', 'hipertensão', 'hipertenso', 'colesterol', 'renal'];
-        
-        if (indicativosMetabolicos.some(cond => restricaoTexto.includes(cond) || doencaTexto.includes(cond))) {
-            temRestricaoMetabolica = true;
-        }
+        const temRestricaoMetabolica = indicativosMetabolicos.some(cond => restricaoTexto.includes(cond) || doencaTexto.includes(cond));
 
         let grupo = '';
         if (temAlergiaIntestinal) {
@@ -372,38 +198,64 @@ document.addEventListener('DOMContentLoaded', () => {
             grupo = 'Grupo 1 – Condições Metabólicas';
         }
         
-        // 3. COLETAR DADOS COMPLETOS E SALVAR
-        
-        const dadosCompletos = {
+        // --- 3. MONTAGEM DO OBJETO DE AVALIAÇÃO ---
+        const dadosAvaliacao = {
             pontuacao: pontuacaoTotal,
             grupo: grupo,
-            
-            p1_doenca: document.querySelector('input[name="p1_doenca"]:checked')?.value || 'nao_respondeu',
+            p1_doenca: document.querySelector('input[name="p1_doenca"]:checked')?.value,
             p1_doenca_outros: doencaTexto,
             p2_alergia: alergias.filter(v => v !== 'nenhuma'),
             p2_alergia_outros: document.querySelector('input[name="p2_outros"]')?.value || '',
-            p3_restricao: document.querySelector('input[name="p3_restricao"]:checked')?.value || 'nao_respondeu',
+            p3_restricao: document.querySelector('input[name="p3_restricao"]:checked')?.value,
             p3_restricao_outros: restricaoTexto,
-            p4_exercicio: document.querySelector('input[name="p4_exercicio"]:checked')?.value || 'nao_respondeu',
-            p5_apetite: document.querySelector('input[name="p5_apetite"]:checked')?.value || 'nao_respondeu',
+            p4_exercicio: document.querySelector('input[name="p4_exercicio"]:checked')?.value,
+            p5_apetite: document.querySelector('input[name="p5_apetite"]:checked')?.value,
             p6_objetivo: Array.from(document.querySelectorAll('input[name="p6_objetivo"]:checked')).map(cb => cb.value),
-            p7_refeicoes: document.querySelector('input[name="p7_refeicoes"]:checked')?.value || 'nao_respondeu',
+            p7_refeicoes: document.querySelector('input[name="p7_refeicoes"]:checked')?.value,
             p8_alimentos_evita: document.querySelector('textarea[name="p8_alimentos_evita"]')?.value || '',
             p9_frequencia: document.querySelector('textarea[name="p9_frequencia"]')?.value || '',
-            p10_emocional: document.querySelector('input[name="p10_emocional"]:checked')?.value || 'nao_respondeu',
-            
+            p10_emocional: document.querySelector('input[name="p10_emocional"]:checked')?.value,
             timestamp: new Date().toISOString()
         };
 
-        sessionStorage.setItem('resultadoAvaliacao', JSON.stringify(dadosCompletos));
-        localStorage.setItem('ultimaAvaliacao', JSON.stringify(dadosCompletos));
+        // --- 4. LÓGICA DE SALVAMENTO CENTRALIZADA ---
+        try {
+            const usuarioSessao = JSON.parse(localStorage.getItem('usuario'));
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
 
-        const dadosUsuario = JSON.parse(localStorage.getItem('dadosUsuario')) || {};
-        salvarClienteNoArray(dadosUsuario, dadosCompletos);
+            if (!usuarioSessao) {
+                throw new Error("Sessão não encontrada. Faça o login novamente.");
+            }
+            
+            let usuarioAtualizado = null;
 
-        setTimeout(() => {
-            reverter();
-            window.location.href = "../pontuacao/pontuacao.html";
-        }, 500);
+            const usuariosAtualizados = usuarios.map(user => {
+                if (user.contatoAcesso === usuarioSessao.contatoAcesso) {
+                    usuarioAtualizado = { ...user, avaliacao: dadosAvaliacao };
+                    return usuarioAtualizado;
+                }
+                return user;
+            });
+            
+            if (!usuarioAtualizado) {
+                 throw new Error("Usuário não encontrado na base de dados para atualização.");
+            }
+
+            // Salva a lista principal de usuários com os novos dados
+            localStorage.setItem('usuarios', JSON.stringify(usuariosAtualizados));
+            // Atualiza a sessão ativa com os dados completos
+            localStorage.setItem('usuario', JSON.stringify(usuarioAtualizado));
+
+            // --- 5. REDIRECIONAMENTO ---
+            setTimeout(() => {
+                reverterLoading();
+                window.location.href = "../pontuacao/pontuacao.html";
+            }, 500);
+
+        } catch (error) {
+            console.error("Falha ao salvar a avaliação do usuário:", error);
+            alert("Ocorreu um erro ao salvar sua avaliação. Por favor, tente novamente.");
+            reverterLoading();
+        }
     });
 });

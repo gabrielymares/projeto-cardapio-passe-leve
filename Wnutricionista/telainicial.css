@@ -493,28 +493,6 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.add-week-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: var(--main-green);
-    color: white;
-    border: none;
-    font-size: 32px;
-    cursor: pointer;
-    align-self: flex-end;
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.add-week-button:hover {
-    background-color: var(--dark-green-hover);
-    transform: scale(1.1);
-}
 
 /* Responsividade */
 @media (max-width: 1024px) {

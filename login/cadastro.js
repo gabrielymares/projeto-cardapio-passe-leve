@@ -9,17 +9,12 @@ const userTypeTabs = document.querySelectorAll(".type-tab");
 const cadastroNutricionista = document.getElementById("cadastroNutricionista");
 const cadastroPaciente = document.getElementById("cadastroPaciente");
 
-// Variável de controle
-let userTypeAtual = 'nutricionista';
-let dadosCadastroTemp = {};
-
 // ==== Elementos do Nutricionista ====
 const nutriFase1 = document.getElementById("nutriFase1");
 const nutriFase2 = document.getElementById("nutriFase2");
 const btnNutriProximaFase = document.getElementById("btnNutriProximaFase");
 const btnNutriFinalizarCadastro = document.getElementById("btnNutriFinalizarCadastro");
 const btnVoltarFase = document.getElementById("btnVoltarFase");
-
 const nutriCadastroInput = document.getElementById("nutriCadastroInput");
 const nutriSenhaCadastroInput = document.getElementById("nutriSenhaCadastroInput");
 const nutriConfirmarSenhaInput = document.getElementById("nutriConfirmarSenhaInput");
@@ -39,6 +34,11 @@ const btnEnviarLogin = document.getElementById("btnEnviarLogin");
 const loginInput = document.getElementById("loginInput");
 const senhaLoginInput = document.getElementById("senhaLoginInput"); 
 
+// ==== Variáveis de Controle e Chave de Armazenamento ====
+let userTypeAtual = 'nutricionista';
+let dadosCadastroTemp = {};
+const USERS_STORAGE_KEY = 'usuarios'; // Chave única para armazenar todos os usuários
+
 
 // ==== Funções de Máscara ====
 
@@ -55,7 +55,6 @@ function applyContatoMask(e) {
     let val = e.target.value || "";
     val = val.trim();
 
-    // Prioriza modo Email se encontrar @
     if (val.includes("@") || !/^[\d()\s\-]*$/.test(val)) {
         e.target.setAttribute("inputmode", "email");
         e.target.maxLength = 254;
@@ -63,7 +62,6 @@ function applyContatoMask(e) {
         return;
     }
 
-    // Aplica a máscara de telefone
     const digits = val.replace(/\D/g, "");
     if (digits.length > 0 || val.includes("(")) {
         e.target.setAttribute("inputmode", "tel");
@@ -97,7 +95,6 @@ function showTab(tab) {
         formCadastro.classList.add("active");
         formLogin.classList.remove("active");
         
-        // Garante que a fase correta do tipo ativo seja exibida
         showNutriFase(1); 
         showUserTypeForm(userTypeAtual);
     } else {
@@ -126,20 +123,14 @@ function showNutriFase(faseNumber) {
 function showUserTypeForm(type) {
     userTypeAtual = type;
     
-    // Atualiza a barra de seleção de tipo (Nutri/Paciente)
     userTypeTabs.forEach(tab => {
-        if (tab.getAttribute('data-type') === type) {
-            tab.classList.add('active');
-        } else {
-            tab.classList.remove('active');
-        }
+        tab.classList.toggle('active', tab.getAttribute('data-type') === type);
     });
 
-    // Exibe o formulário de tipo correto
     if (type === 'nutricionista') {
         cadastroNutricionista.classList.add('active');
         cadastroPaciente.classList.remove('active');
-        showNutriFase(1); // Sempre volta para a Fase 1 do Nutri
+        showNutriFase(1);
     } else {
         cadastroPaciente.classList.add('active');
         cadastroNutricionista.classList.remove('active');
@@ -149,11 +140,9 @@ function showUserTypeForm(type) {
 
 // ==== Eventos de Clique ====
 
-// Tabs Cadastro/Login
 btnCadastro.addEventListener("click", () => showTab("cadastro"));
 btnLogin.addEventListener("click", () => showTab("login"));
 
-// Tabs Tipo de Usuário (Nutricionista/Paciente)
 userTypeTabs.forEach(tab => {
     tab.addEventListener('click', () => {
         showUserTypeForm(tab.getAttribute('data-type'));
@@ -161,11 +150,15 @@ userTypeTabs.forEach(tab => {
 });
 
 
+// =========================================================================
+// LÓGICA DE CADASTRO REATORADA
+// =========================================================================
+
 // ==== Lógica de Cadastro do NUTRICIONISTA (2 Fases) ====
 
 btnNutriProximaFase.addEventListener("click", (e) => {
     e.preventDefault();
-
+    
     if (!nutriCadastroInput.value.trim() || !nutriSenhaCadastroInput.value.trim() || !nutriConfirmarSenhaInput.value.trim()) {
         alert("Preencha todos os campos de acesso.");
         return;
@@ -178,12 +171,10 @@ btnNutriProximaFase.addEventListener("click", (e) => {
         alert("As senhas não coincidem.");
         return;
     }
-
     dadosCadastroTemp = {
         contatoAcesso: nutriCadastroInput.value.trim(),
         senha: nutriSenhaCadastroInput.value
     };
-
     showNutriFase(2);
 });
 
@@ -196,7 +187,8 @@ btnNutriFinalizarCadastro.addEventListener("click", (e) => {
     }
     
     const dadosNutricionistaCompleto = {
-        tipo: 'nutricionista', // CHAVE CRUCIAL
+        id: Date.now() + Math.random(),
+        tipo: 'nutricionista',
         ...dadosCadastroTemp,
         nome: nomeNutriInput.value.trim(),
         crn: crnNutriInput.value.trim(),
@@ -204,20 +196,24 @@ btnNutriFinalizarCadastro.addEventListener("click", (e) => {
         dataCadastro: new Date().toISOString()
     };
 
-    // Salva o Nutricionista
-    localStorage.setItem(`user_${dadosNutricionistaCompleto.contatoAcesso}`, JSON.stringify(dadosNutricionistaCompleto));
+    const usuarios = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
+
+    const usuarioExistente = usuarios.find(user => user.contatoAcesso === dadosNutricionistaCompleto.contatoAcesso);
+    if (usuarioExistente) {
+        alert("Este email/telefone já está cadastrado!");
+        return;
+    }
+
+    usuarios.push(dadosNutricionistaCompleto);
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usuarios));
     
     alert(`Cadastro da(o) ${dadosNutricionistaCompleto.nome} (Nutricionista) finalizado com sucesso!`);
     
     dadosCadastroTemp = {}; 
     showTab("login");
-    // Limpar campos
-    nutriCadastroInput.value = '';
-    nutriSenhaCadastroInput.value = '';
-    nutriConfirmarSenhaInput.value = '';
+    formCadastro.reset(); // Limpa todos os campos do formulário
 });
 
-// Botão Voltar da Fase 2 do Nutricionista
 btnVoltarFase.addEventListener("click", () => showNutriFase(1));
 
 
@@ -241,28 +237,35 @@ btnPacienteFinalizarCadastro.addEventListener("click", (e) => {
     }
 
     const dadosPaciente = {
-        tipo: 'paciente', // CHAVE CRUCIAL
+        id: Date.now() + Math.random(),
+        tipo: 'paciente',
         nome: pacienteNomeInput.value.trim(),
         contatoAcesso: pacienteCadastroInput.value.trim(),
         senha: pacienteSenhaCadastroInput.value,
         dataCadastro: new Date().toISOString()
     };
 
-    // Salva o Paciente
-    localStorage.setItem(`user_${dadosPaciente.contatoAcesso}`, JSON.stringify(dadosPaciente));
+    const usuarios = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
 
-    alert(`Cadastro do(a) ${dadosPaciente.nome} (Paciente) finalizado com sucesso!`);
+    const usuarioExistente = usuarios.find(user => user.contatoAcesso === dadosPaciente.contatoAcesso);
+    if (usuarioExistente) {
+        alert("Este email/telefone já está cadastrado!");
+        return;
+    }
+    
+    usuarios.push(dadosPaciente);
+    localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usuarios));
 
-    // Limpar campos e ir para o login
+    alert(`Cadastro de ${dadosPaciente.nome} (Paciente) finalizado com sucesso!`);
+
     showTab("login");
-    pacienteNomeInput.value = '';
-    pacienteCadastroInput.value = '';
-    pacienteSenhaCadastroInput.value = '';
-    pacienteConfirmarSenhaInput.value = '';
+    formCadastro.reset(); // Limpa todos os campos do formulário
 });
 
 
-// ==== Lógica de LOGIN (Unificada) ====
+// =========================================================================
+// LÓGICA DE LOGIN REATORADA
+// =========================================================================
 
 btnEnviarLogin.addEventListener("click", (e) => {
     e.preventDefault();
@@ -275,42 +278,35 @@ btnEnviarLogin.addEventListener("click", (e) => {
     const contatoDigitado = loginInput.value.trim();
     const senhaDigitada = senhaLoginInput.value;
     
-    const dadosCadastradosJSON = localStorage.getItem(`user_${contatoDigitado}`);
+    const usuarios = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY)) || [];
 
-    if (!dadosCadastradosJSON) {
+    const dadosCadastrados = usuarios.find(user => user.contatoAcesso === contatoDigitado);
+
+    if (!dadosCadastrados) {
         alert("Credenciais inválidas. Usuário não encontrado.");
         return;
     }
 
-    const dadosCadastrados = JSON.parse(dadosCadastradosJSON);
-
-    // 1. Verifica a senha
     if (dadosCadastrados.senha !== senhaDigitada) {
         alert("Credenciais inválidas. Senha incorreta.");
         return;
     }
     
-    // 2. Login bem-sucedido: Armazena dados de sessão
-    localStorage.setItem('usuarioLogado', 'true');
-    localStorage.setItem('usuarioTipo', dadosCadastrados.tipo);
-    localStorage.setItem('usuarioContato', contatoDigitado);
+    // Salva o usuário encontrado como a sessão ativa
+    localStorage.setItem('usuario', JSON.stringify(dadosCadastrados));
     
-    // 3. Redirecionamento baseado no tipo de usuário
+    // Redireciona com base no tipo
     if (dadosCadastrados.tipo === 'nutricionista') {
-        localStorage.setItem('dadosNutricionista', JSON.stringify(dadosCadastrados));
-        window.location.href = "../Wnutricionista/telainicial.html"; // Redirecionamento Nutri
+        window.location.href = "../Wnutricionista/telainicial.html";
     } else {
-        localStorage.setItem('dadosPaciente', JSON.stringify(dadosCadastrados));
-        window.location.href = "../formulario/formulario.html"; // Redirecionamento Paciente
+        window.location.href = "../formulario/formulario.html";
     }
 });
 
-// ==== Inicialização Corrigida ====
+
+// ==== Inicialização da Página ====
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Define o estado inicial padrão
     userTypeAtual = 'nutricionista'; 
-    
-    // 2. Ativa a aba de Cadastro e a aba Nutricionista (caso o navegador não mantenha o estado)
     showTab("cadastro"); 
     showUserTypeForm(userTypeAtual);
 });
