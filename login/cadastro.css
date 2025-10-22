@@ -1,0 +1,564 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Container principal dividido */
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Metade esquerda com gradiente sutil */
+.left-panel {
+    flex: 1;
+    background: linear-gradient(135deg, #9cb854 0%, #7a9d3f 50%, #6b8d38 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efeito de círculos decorativos no fundo - MELHORADO */
+.left-panel::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    top: -250px;
+    left: -250px;
+    animation: floatExpanded 12s ease-in-out infinite;
+}
+
+.left-panel::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    bottom: -200px;
+    right: -200px;
+    animation: floatExpanded 15s ease-in-out infinite reverse;
+}
+
+@keyframes floatExpanded {
+    0%, 100% { 
+        transform: translateY(0) translateX(0) scale(1); 
+        opacity: 1;
+    }
+    25% {
+        transform: translateY(-30px) translateX(20px) scale(1.05);
+        opacity: 0.8;
+    }
+    50% { 
+        transform: translateY(-40px) translateX(-10px) scale(1.1); 
+        opacity: 0.6;
+    }
+    75% {
+        transform: translateY(-20px) translateX(15px) scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+.left-panel h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    animation: slideInLeftSmooth 1s ease-out;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.left-panel .sub {
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 1;
+    animation: slideInLeftSmooth 1s ease-out 0.3s both;
+    letter-spacing: 0.5px;
+    opacity: 0.95;
+}
+
+@keyframes slideInLeftSmooth {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.right-panel {
+    flex: 1;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px 40px 40px; 
+    animation: fadeInSmooth 0.8s ease-out;
+}
+
+@keyframes fadeInSmooth {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo com múltiplos efeitos visuais - MELHORADO */
+.logo {
+    width: 300px;
+    height: auto;
+    margin-bottom: 30px;
+    display: block;
+    animation: zoomInEnhanced 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), logoPulseSmooth 4s ease-in-out 1.5s infinite;
+    filter: drop-shadow(0 4px 12px rgba(143, 162, 72, 0.25));
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    position: relative;
+}
+
+/* Efeito de brilho ao redor da logo - MELHORADO */
+.logo::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110%;
+    height: 110%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(143, 162, 72, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.logo:hover {
+    transform: scale(1.08) rotate(-3deg);
+    filter: drop-shadow(0 10px 25px rgba(143, 162, 72, 0.45)) brightness(1.1);
+}
+
+.logo:hover::before {
+    opacity: 1;
+    animation: glowPulseExpanded 2s ease-in-out infinite;
+}
+
+@keyframes zoomInEnhanced {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-15deg);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.05) rotate(2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes logoPulseSmooth {
+    0%, 100% { 
+        transform: scale(1);
+        filter: drop-shadow(0 4px 12px rgba(143, 162, 72, 0.25));
+    }
+    50% { 
+        transform: scale(1.03);
+        filter: drop-shadow(0 6px 18px rgba(143, 162, 72, 0.35));
+    }
+}
+
+@keyframes glowPulseExpanded {
+    0%, 100% { 
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% { 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+}
+
+/* Caixa de login com sombra mais elegante */
+.login-box {
+    background: #eeeeee;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    width: 350px;
+    animation: slideUpBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.login-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+}
+
+@keyframes slideUpBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Seleção de Tipo de Usuário === */
+.user-type-selection {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.type-tab {
+    flex: 1;
+    padding: 8px 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    background: transparent;
+    color: #535a3a;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+.type-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #8fa248;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform: translateX(-50%);
+}
+
+.type-tab:hover {
+    transform: translateY(-2px);
+    color: #333333;
+}
+
+.type-tab:hover::after {
+    width: 80%;
+}
+
+.type-tab.active {
+    background: #ffffff;
+    color: #333333;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    transform: scale(1.02);
+}
+
+/* Tabs de Cadastro/Login com efeito de transição suave - MELHORADO */
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px 0;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 10px;
+    background: #ddd;
+    color: #535a3a;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.tab:hover::before {
+    left: 100%;
+}
+
+.tab:hover {
+    background: #c5c5c5;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tab.active {
+    background: linear-gradient(135deg, #8fa248 0%, #7a8c3d 100%);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(143, 162, 72, 0.4);
+    transform: scale(1.05);
+    animation: tabActivate 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes tabActivate {
+    0% {
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+/* Inputs com efeitos modernos - MELHORADO */
+input {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: #8fa248;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+input:focus {
+    outline: none;
+    border-color: #7a8c3d;
+    background: #7a8c3d;
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 6px 20px rgba(143, 162, 72, 0.3);
+    animation: inputFocusPulse 0.6s ease;
+}
+
+@keyframes inputFocusPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(143, 162, 72, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(143, 162, 72, 0);
+    }
+    100% {
+        box-shadow: 0 6px 20px rgba(143, 162, 72, 0.3);
+    }
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s ease;
+}
+
+input:focus::placeholder {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Botão enviar com efeito de onda - MELHORADO */
+.submit {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #8fa248 0%, #7a8c3d 100%);
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(143, 162, 72, 0.3);
+}
+
+.submit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.7s ease, height 0.7s ease;
+}
+
+.submit::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.submit:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.submit:hover::after {
+    left: 100%;
+}
+
+.submit:hover {
+    background: linear-gradient(135deg, #7a8c3d 0%, #4c532c 100%);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(143, 162, 72, 0.5);
+}
+
+.submit:active {
+    transform: translateY(-2px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(143, 162, 72, 0.4);
+    animation: buttonPress 0.2s ease;
+}
+
+@keyframes buttonPress {
+    0% {
+        transform: translateY(-4px) scale(1.02);
+    }
+    50% {
+        transform: translateY(0) scale(0.96);
+    }
+    100% {
+        transform: translateY(-2px) scale(0.98);
+    }
+}
+
+/* Animação de transição entre formulários - SUAVE */
+.form {
+    display: none;
+    animation: formFadeInSmooth 0.8s ease-out;
+}
+
+.form.active {
+    display: block;
+}
+
+@keyframes formFadeInSmooth {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === Controle de Fases e Tipos de Cadastro - SUAVE === */
+.type-form {
+    display: none;
+}
+
+.type-form.active {
+    display: block;
+    animation: formFadeInSmooth 0.8s ease-out; 
+}
+
+.cadastro-fase {
+    display: none;
+    animation: formFadeInSmooth 0.8s ease-out;
+}
+
+.cadastro-fase.active {
+    display: block;
+}
+
+/* Estilo para o link "Voltar" - MELHORADO */
+.voltar-fase {
+    margin-top: 15px;
+    color: #535a3a;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: inline-block;
+}
+
+.voltar-fase:hover {
+    color: #8fa248;
+    text-decoration: underline;
+    transform: translateX(-5px) scale(1.05);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .left-panel {
+        flex: none;
+        min-height: 30vh;
+    }
+    
+    .left-panel h1 {
+        font-size: 2rem;
+    }
+    
+    .right-panel {
+        flex: none;
+        min-height: 70vh;
+    }
+    
+    .login-box {
+        width: 90%;
+        max-width: 350px;
+    }
+    
+    .logo {
+        width: 250px;
+    }
+}
