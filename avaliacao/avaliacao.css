@@ -1,0 +1,425 @@
+/* ===== RESET e PALETA DE CORES (Baseado no seu exemplo) ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Cores principais do seu exemplo */
+    --main-green: #8fa248;
+    --box-bg-color: #dfeddc;
+    --dark-green-hover: #4c532c;
+    --light-gray: #f0f0f0;
+    --white: #ffffff;
+    --dark-text: #333333;
+    --placeholder-color: #888888;
+}
+
+/* ===== BODY (Com fundo de imagem simulado) ===== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e8f0e6 100%);
+    
+    /* REMOVA as linhas abaixo se não quiser o fundo de imagem */
+    /* background-image: url('Dinfor.jpg'); 
+    background-size: cover; 
+    background-position: center center; 
+    background-repeat: no-repeat; 
+    background-attachment: fixed; */
+}
+
+/* ===== CONTAINER (Substitui o .form-container do seu exemplo) ===== */
+.container {
+    max-width: 600px;
+    width: 90%;
+    margin: 20px auto;
+    background: var(--box-bg-color);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== HEADER ===== */
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: var(--main-green);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+header p {
+    font-size: 15px;
+    color: var(--dark-text);
+    opacity: 0.8;
+}
+
+/* Estilo do link 'voltar' (Opcional) */
+.back-button-arrow {
+    background: linear-gradient(135deg, var(--main-green) 0%, #7a8a3a 100%);
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 11px 16px 11px 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 4px 12px rgba(143, 162, 72, 0.25);
+}
+
+.back-button-arrow:hover {
+    background: linear-gradient(135deg, var(--dark-green-hover) 0%, #3d422a 100%);
+    transform: translateX(-4px);
+    box-shadow: 0 6px 16px rgba(76, 83, 44, 0.35);
+}
+
+.back-button-arrow:active {
+    transform: translateX(-2px) scale(0.98);
+}
+
+.back-button-arrow::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 5px solid white;
+    transition: transform 0.3s ease;
+}
+
+.back-button-arrow:hover::before {
+    transform: translateX(-3px);
+}
+
+/* ===== ABAS (Tabs) ===== */
+.tabs {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 0;
+    gap: 4px;
+}
+
+.tab-button {
+    background: linear-gradient(135deg, var(--main-green) 0%, #7a8a3a 100%);
+    border: none;
+    padding: 12px 18px;
+    margin: 0;
+    color: var(--white);
+    cursor: pointer;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    line-height: 1;
+}
+
+.tab-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.3s ease;
+}
+
+.tab-button:hover {
+    background: linear-gradient(135deg, #9ab050 0%, #5a6a2c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(143, 162, 72, 0.3);
+}
+
+.tab-button:hover::before {
+    left: 100%;
+}
+
+.tab-button.active {
+    background: var(--box-bg-color);
+    color: var(--main-green);
+    font-weight: 700;
+    box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+/* ===== CONTEÚDO DAS ABAS ===== */
+.tab-content {
+    display: none;
+    background: var(--box-bg-color);
+    padding: 25px;
+    border-radius: 0 0 15px 15px;
+    border-top: none;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===== PERGUNTAS (Estilo de Input/Campo) ===== */
+.pergunta {
+    background: var(--white);
+    color: var(--dark-text);
+    padding: 16px 18px;
+    margin: 12px 0;
+    cursor: pointer;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.pergunta:hover {
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateX(4px);
+    border-color: rgba(143, 162, 72, 0.2);
+}
+
+.pergunta:active {
+    transform: translateX(2px);
+}
+
+.pergunta span {
+    font-size: 18px;
+    color: var(--main-green);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
+}
+
+.pergunta.active span {
+    transform: rotate(180deg);
+}
+
+/* ===== RESPOSTAS (Conteúdo expandido) ===== */
+.respostas {
+    display: none;
+    margin: -10px 0 15px 0;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #e9f3e8 0%, #f0f8ee 100%);
+    border-radius: 0 0 12px 12px;
+    border-top: 3px solid var(--main-green);
+    animation: expandDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 8px rgba(143, 162, 72, 0.1);
+}
+
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+}
+
+.respostas.active {
+    display: block;
+}
+
+.respostas label {
+    display: flex;
+    align-items: flex-start;
+    margin: 12px 0;
+    cursor: pointer;
+    color: var(--dark-text);
+    transition: all 0.2s ease;
+}
+
+.respostas label:hover {
+    color: var(--main-green);
+    transform: translateX(4px);
+}
+
+.respostas input[type="radio"],
+.respostas input[type="checkbox"] {
+    margin-right: 10px;
+    margin-top: 4px;
+    accent-color: var(--main-green);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    width: 18px;
+    height: 18px;
+}
+
+.respostas input[type="radio"]:hover,
+.respostas input[type="checkbox"]:hover {
+    transform: scale(1.15);
+}
+
+/* Estilo para campos de texto (textarea e input text) */
+.respostas textarea,
+.respostas input[type="text"].campo-outros {
+    width: 100%;
+    padding: 14px 16px;
+    margin-top: 12px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-color: var(--white);
+    color: var(--dark-text);
+    font-size: 0.95em;
+    outline: none;
+    resize: vertical;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-family: inherit;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.respostas textarea:focus,
+.respostas input[type="text"].campo-outros:focus {
+    border-color: var(--main-green);
+    box-shadow: 0 4px 16px rgba(143, 162, 72, 0.2);
+    transform: translateY(-2px);
+}
+
+.respostas textarea::placeholder,
+.respostas input[type="text"].campo-outros::placeholder {
+    color: var(--placeholder-color);
+    opacity: 0.8;
+}
+
+/* ===== FORMULÁRIO (Wrapper para centralizar botão) ===== */
+#formulario-avaliacao {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== BOTÕES (btn-confirmar do seu exemplo) ===== */
+button[type="submit"] {
+    padding: 16px 24px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--main-green) 0%, #7a8a3a 100%);
+    color: white;
+    font-size: 1.05em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 28px;
+    box-shadow: 0 6px 20px rgba(143, 162, 72, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, var(--dark-green-hover) 0%, #3d422a 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(76, 83, 44, 0.35);
+}
+
+button[type="submit"]:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(76, 83, 44, 0.3);
+}
+
+button[type="submit"]:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 24px;
+        margin: 20px auto;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    header p {
+        font-size: 14px;
+    }
+
+    .tab-button {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+
+    .pergunta {
+        padding: 14px 16px;
+        margin: 10px 0;
+    }
+
+    .respostas {
+        padding: 16px 18px;
+    }
+
+    button[type="submit"] {
+        padding: 14px 20px;
+        font-size: 1em;
+        max-width: 100%;
+        margin-top: 24px;
+    }
+}

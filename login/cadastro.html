@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passe Leve - Cadastro/Login</title>
+    <link rel="stylesheet" href="./cadastro.css">
+</head>
+<body>
+    <div class="container">
+        
+        <div class="left-panel">
+            <h1>Seja Bem Vindo(a) ao<br>Passe Leve!</h1>
+            <p class="sub">PLANO DE ADAPTAÇÃO PROGRESSIVA DE HÁBITOS ALIMENTARES</p>
+        </div>
+        
+        <div class="right-panel">
+            <div class="login-box">
+            
+                <img src="../imagens/passelevelogo-removebg-preview__1_-removebg-preview.png" alt="Logo Passe Leve" class="logo">
+
+                <div class="user-type-selection" id="userTypeSelection">
+                    <button class="type-tab active" data-type="nutricionista">Sou Nutricionista</button>
+                    <button class="type-tab" data-type="paciente">Sou Paciente</button>
+                </div>
+
+                <div class="tab-buttons">
+                    <button class="tab active" id="btnCadastro">Cadastro</button>
+                    <button class="tab" id="btnLogin">Login</button>
+                </div>
+
+                <div id="formCadastro" class="form active">
+                    
+                    <div id="cadastroNutricionista" class="type-form active">
+                        <div id="nutriFase1" class="cadastro-fase active">
+                            <input type="text" id="nutriCadastroInput" placeholder="Email ou Telefone de Acesso">
+                            <input type="password" id="nutriSenhaCadastroInput" placeholder="Senha">
+                            <input type="password" id="nutriConfirmarSenhaInput" placeholder="Confirmar Senha">
+                            <button class="submit" id="btnNutriProximaFase">Próxima Etapa (Dados Profissionais)</button>
+                        </div>
+
+                        <div id="nutriFase2" class="cadastro-fase">
+                            <input type="text" id="nomeNutriInput" placeholder="Nome Completo">
+                            <input type="text" id="crnNutriInput" placeholder="CRN">
+                            <input type="tel" id="contatoNutriInput" placeholder="Telefone Profissional">
+                            <button class="submit" id="btnNutriFinalizarCadastro">Finalizar Cadastro</button>
+                            <p class="voltar-fase" id="btnVoltarFase">Voltar</p>
+                        </div>
+                    </div>
+                    
+                    <div id="cadastroPaciente" class="type-form">
+                        <input type="text" id="pacienteNomeInput" placeholder="Seu Nome Completo">
+                        <input type="text" id="pacienteCadastroInput" placeholder="Email ou Telefone">
+                        <input type="password" id="pacienteSenhaCadastroInput" placeholder="Senha">
+                        <input type="password" id="pacienteConfirmarSenhaInput" placeholder="Confirmar Senha">
+                        <button class="submit" id="btnPacienteFinalizarCadastro">Cadastrar</button>
+                    </div>
+                </div>
+
+                <div id="formLogin" class="form">
+                    <input type="text" id="loginInput" placeholder="Email ou Telefone">
+                    <input type="password" id="senhaLoginInput" placeholder="Senha">
+                    <button class="submit" id="btnEnviarLogin">Entrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./cadastro.js"></script>
+    <script src="verificarSessao.js"></script>
+</body>
+</html>

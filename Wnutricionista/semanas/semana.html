@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - Semana 1</title>
+    <link rel="stylesheet" href="semana.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="voltarParaDetalhes()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <h1 id="tituloSemana">Semana 1</h1>
+    </div>
+
+    <div class="semanas-container" id="semanasContainer"></div>
+
+    <!-- Modal -->
+    <div id="modalRefeicao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitulo">Adicionar Refeição</h2>
+                <button class="close-btn" onclick="fecharModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="formRefeicao">
+                    <div class="form-group">
+                        <label for="tipoRefeicao">Tipo de Refeição:</label>
+                        <select id="tipoRefeicao" required>
+                            <option value="Café da manhã">Café da manhã</option>
+                            <option value="Almoço">Almoço</option>
+                            <option value="Jantar">Jantar</option>
+                            <option value="Lanche">Lanche</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horario">Horário:</label>
+                        <input type="time" id="horario" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alimento">Alimento:</label>
+                        <input type="text" id="alimento" placeholder="Ex: Pão com ovo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gramas">Quantidade:</label>
+                        <input type="text" id="gramas" placeholder="Ex: 100-110 gramas" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancelar">Cancelar</button>
+                        <button type="submit" class="btn-salvar">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="semana.js"></script>
+</body>
+</html>
