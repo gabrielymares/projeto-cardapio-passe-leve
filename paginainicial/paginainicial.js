@@ -58,7 +58,11 @@ function carregarGrupoDoPaciente(usuario) {
     const grupo = usuario.avaliacao?.grupo;
 
     if (grupo) {
+
         containerGrupo.innerHTML = `<strong>Seu Foco:</strong> ${grupo}`;
+
+        containerGrupo.innerHTML = ` ${grupo}`;
+ f06a55d498352579680502019c4c9fe0d8d3e9a2
     } else {
         containerGrupo.textContent = 'Grupo ainda não definido pelo nutricionista.';
     }
